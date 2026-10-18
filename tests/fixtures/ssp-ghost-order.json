@@ -1,0 +1,97 @@
+{
+ "note": "ssp.exe's Change ghost submenu as a screenshot of one SSP install shows it: every ghost of that install, its folder id and its ghost/master/descript.txt name, in the menu's order",
+ "ghosts": [
+  {
+   "id": "BTHver.5",
+   "name": "BloodTeaHOUSEver.5"
+  },
+  {
+   "id": "DSLGS",
+   "name": "Downer_Smoker_LegalLolita_Gothic_Surgeon"
+  },
+  {
+   "id": "emily4",
+   "name": "Emily/Phase4.5"
+  },
+  {
+   "id": "tsubasa",
+   "name": "Hayama-san Next Door"
+  },
+  {
+   "id": "NodePsimoon",
+   "name": "NodePsimoon"
+  },
+  {
+   "id": "SERION",
+   "name": "SERION的日常。"
+  },
+  {
+   "id": "etherism",
+   "name": "エーテリズム"
+  },
+  {
+   "id": "Katari",
+   "name": "カタリベカタリ"
+  },
+  {
+   "id": "crawler_uploader",
+   "name": "クローラ＆ロダ"
+  },
+  {
+   "id": "Nato",
+   "name": "なっとう"
+  },
+  {
+   "id": "HappyDice",
+   "name": "ハッピー☆ダイス"
+  },
+  {
+   "id": "hayato",
+   "name": "ハヤト"
+  },
+  {
+   "id": "mayura",
+   "name": "まゆら＆黒うにゅう"
+  },
+  {
+   "id": "MEMORY_",
+   "name": "めもりーな"
+  },
+  {
+   "id": "roommate",
+   "name": "ルームメイトは変わり者"
+  },
+  {
+   "id": "machimaki",
+   "name": "同人屋稼業"
+  },
+  {
+   "id": "pit",
+   "name": "奈落の王"
+  },
+  {
+   "id": "kanade_2nd",
+   "name": "奏でる日常の音色"
+  },
+  {
+   "id": "bonsyou",
+   "name": "梵鐘/MMOBPG"
+  },
+  {
+   "id": "kuro",
+   "name": "猫になった日"
+  },
+  {
+   "id": "like_a_cat",
+   "name": "猫になった日"
+  },
+  {
+   "id": "Hanaichi",
+   "name": "花いちもんめ"
+  },
+  {
+   "id": "UTAU_tai",
+   "name": "適当にUTAわせて"
+  }
+ ]
+}

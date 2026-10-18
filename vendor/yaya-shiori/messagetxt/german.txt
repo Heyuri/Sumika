@@ -1,0 +1,175 @@
+﻿//
+// Fatale Fehlerzeichenketten (Deutsch)
+!!!msgf
+*
+//
+// Fehlerzeichenketten (Deutsch)
+!!!msge
+*Fehler E0000 : Unbekannter Fehler.
+*Fehler E0001 : Funktionsname ist erforderlich.
+*Fehler E0002 : Zu viele '}' vorhanden.
+*Fehler E0003 : Ungültiger Name für die Funktion verwendet.
+*Fehler E0004 : Nicht analysierbar. Hier ist wahrscheinlich '{' erforderlich.
+*Fehler E0005 : Datei konnte nicht geöffnet werden.
+*Fehler E0006 : Name des Arrays fehlt.
+*Fehler E0007 : Unvollständige Zeichenkette vorhanden.
+*Fehler E0008 : Ungültiges doppeltes Anführungszeichen vorhanden.
+*Fehler E0009 : Interner Fehler (1).
+*Fehler E0010 : Nicht analysierbare Zeichenkette.
+*Fehler E0011 : Im Bezeichner werden einige ungültige Zeichen verwendet.
+*Fehler E0012 : Ungültiger Name für die Variable verwendet.
+*Fehler E0013 : Doppelte Funktionsnamen vorhanden.
+*Fehler E0014 : Ordnungszahl ist für das Array erforderlich.
+*Fehler E0015 : Interner Fehler (2).
+*Fehler E0016 : Interner Fehler (3).
+*Fehler E0017 : Name des in die Zeichenkette eingebetteten Arrays fehlt.
+*Fehler E0018 : Ordnungszahl des in die Zeichenkette eingebetteten Arrays fehlt.
+*Fehler E0019 : Die Klammer () wurde nicht geschlossen.
+*Fehler E0020 : Die Klammer [] ist ungültig oder wurde nicht korrekt geschlossen.
+*Fehler E0021 : Interner Fehler (4).
+*Fehler E0022 : Ungültiger Ausdruck.
+*Fehler E0023 : Operator ',' wird nicht korrekt verwendet.
+*Fehler E0024 : Operator ',' wird nicht korrekt verwendet.
+*Fehler E0025 : Funktion nicht gefunden.
+*Fehler E0026 : Interner Fehler (5).
+*Fehler E0027 : Es sind keine signifikanten Elemente vorhanden.
+*Fehler E0028 : Interner Fehler (23).
+*Fehler E0029 : Ungültige Zuweisung vorhanden.
+*Fehler E0030 : Undefinierter Funktionsmodifizierer angegeben.
+*Fehler E0031 : Interner Fehler (6).
+// nicht verwendet
+*Fehler E0032 : Unverzichtbare Funktionen wurden nicht gefunden.
+//
+*Fehler E0033 : Interner Fehler (7).
+*Fehler E0034 : Interner Fehler (8).
+*Fehler E0035 : Fehlendes '{' nach 'if'.
+*Fehler E0036 : Fehlendes '{' nach 'elseif'.
+*Fehler E0037 : Fehlendes '{' nach 'else'.
+*Fehler E0038 : Fehlendes '{' nach 'switch'.
+*Fehler E0039 : Fehlendes '{' nach 'while'.
+*Fehler E0040 : Ungültiger Ausdruck wird für die Abbruchbedingung der Syntax 'for' verwendet.
+*Fehler E0041 : Ungültiger Ausdruck wird für die Fortsetzungsbedingung der Syntax 'for' verwendet.
+*Fehler E0042 : Fehlendes '{' nach 'for'.
+*Fehler E0043 : Die Containervariable von 'foreach' ist falsch platziert.
+*Fehler E0044 : Fehlendes '{' nach 'foreach'.
+*Fehler E0045 : Das Label von 'when' muss eine Konstante sein.
+*Fehler E0046 : Das Label von 'when' muss eine Konstante sein.
+*Fehler E0047 : 'if', 'elseif' oder 'case' (entsprechend dieser Zeile) wurde nicht gefunden.
+*Fehler E0048 : Die Klammer () wurde nicht geschlossen.
+*Fehler E0049 : Interner Fehler (9).
+*Fehler E0050 : Das Label von 'when' muss eine Konstante sein.
+*Fehler E0051 : Fehlendes '{' nach 'case'.
+*Fehler E0052 : Interner Fehler (10).
+*Fehler E0053 : Syntaxfehler.
+*Fehler E0054 : Syntaxfehler.
+*Fehler E0055 : Interner Fehler (11).
+*Fehler E0056 : Interner Fehler (12).
+*Fehler E0057 : Variablenwert konnte nicht in Datei gespeichert werden.
+*Fehler E0058 : Interner Fehler (13).
+*Fehler E0059 : Ungültiger Ausdruck.
+*Fehler E0060 : Die Klammer im eingebetteten Element '%()' wurde nicht geschlossen.
+*Fehler E0061 : Das eingebettete Element '%()' in dieser Zeichenkette ist leer.
+*Fehler E0062 : Interner Fehler (14).
+*Fehler E0063 : Es gab kein 'case' entsprechend 'when'.
+*Fehler E0064 : Es gab kein 'case' entsprechend 'when'.
+*Fehler E0065 : Syntaxfehler.
+*Fehler E0066 : Syntaxfehler.
+*Fehler E0067 : Interner Fehler (15).
+*Fehler E0068 : Dieses 'elseif' (oder 'when') konnte nicht verarbeitet werden.
+*Fehler E0069 : Dieses 'else' (oder 'others') konnte nicht verarbeitet werden.
+*Fehler E0070 : Interner Fehler (16).
+*Fehler E0071 : Eine undefinierte Funktion wird aufgerufen.
+*Fehler E0072 : Name der Variable fehlt.
+*Fehler E0073 : Ungültige Verwendung des Arrays: Array-Variable wurde nicht gefunden.
+*Fehler E0074 : Syntaxfehler des Präprozessors.
+*Fehler E0075 : Syntaxfehler des Präprozessors.
+*Fehler E0076 : Ungültige Präprozessoranweisung.
+*Fehler E0077 : Interner Fehler (17).
+*Fehler E0078 : Die Klammer im eingebetteten Element '%[]' wurde nicht geschlossen.
+*Fehler E0079 : Das eingebettete Element '%[]' in dieser Zeichenkette ist leer.
+*Fehler E0080 : Interner Fehler (18).
+*Fehler E0081 : Vor '%[]' steht kein Funktions- oder Variablenaufruf.
+*Fehler E0082 : Interner Fehler (19).
+*Fehler E0083 : Interner Fehler (20).
+// nicht verwendet
+*Fehler E0084 : Interner Fehler (21).
+*Fehler E0085 : Interner Fehler (22).
+//
+*Fehler E0086 : Syntaxfehler.
+*Fehler E0087 : Die Position des Operators '&' ist falsch.
+*Fehler E0088 : Interner Fehler (24).
+*Fehler E0089 : Interner Fehler (25).
+*Fehler E0090 : Interner Fehler (26).
+*Fehler E0091 : Interner Fehler (27).
+*Fehler E0092 : Nach () oder [] sollte kein Operator stehen.
+*Fehler E0093 : Ungültiges einfaches Anführungszeichen vorhanden.
+*Fehler E0094 : Die Klammer {} ist ungültig oder wurde nicht korrekt geschlossen.
+*Fehler E0095 : Es wurde versucht, ein doppeltes Wörterbuch zu laden.
+*Fehler E0096 : Es wurde versucht, ein nicht geladenes Wörterbuch zu entladen.
+*Fehler E0097 : Die Tiefe des Funktionsaufrufs hat ihr Limit erreicht. Die weitere Verarbeitung wurde abgebrochen.
+*Fehler E0098 : Die Schleifenanzahl hat ihr Limit erreicht. Die weitere Verarbeitung wurde abgebrochen.
+*Fehler E0099 : Das Speicherlimit wurde erreicht. Die weitere Verarbeitung wurde abgebrochen.
+*Fehler E0100 : Falsche Speicheradresse aufgerufen. Die weitere Verarbeitung wurde abgebrochen.
+*Fehler E0101 : Kein passendes #ifdef/#ifndef vorhanden.
+*Fehler E0102 : #else/#elifdef/#elifndef nach #else gefunden.
+*Fehler E0103 : #ifdef/#ifndef wurde nicht mit #endif geschlossen.
+*Fehler E0104 : Durch #error abgebrochen.
+//
+// Warnungszeichenketten (Deutsch)
+!!!msgw
+*Warnung W0000 : Syntaxfehler. Diese Zeile wird ignoriert.
+*Warnung W0001 : Wiederherstellung der Variable dieser Zeile fehlgeschlagen: nicht analysierbare Zeile.
+*Warnung W0002 : Wiederherstellung der Variable dieser Zeile fehlgeschlagen: ungültiger Variablenname.
+*Warnung W0003 : Wiederherstellung der Variable dieser Zeile fehlgeschlagen: ungültiger Wert oder ungültiges Trennzeichen
+*Warnung W0004 : Wiederherstellung der Variable dieser Zeile fehlgeschlagen: ungültiger Wert
+*Warnung W0005 : Wiederherstellung der Variable dieser Zeile fehlgeschlagen: ungültiges Trennzeichen
+*Warnung W0006 : Bei der Verarbeitung dieser Zeile ist ein interner Fehler aufgetreten. Diese Zeile ist nicht analysierbar.
+*Warnung W0007 : Der Wert dieser Variable konnte nicht gespeichert werden.
+*Warnung W0008 : Ein oder mehrere Argumente fehlen.
+*Warnung W0009 : Argumenttyp ist ungültig.
+*Warnung W0010 : Leere Zeichenkette ist ungültig.
+*Warnung W0011 : Das Ergebnis kann nicht in die Variable gesetzt werden.
+*Warnung W0012 : Der angegebene Wert liegt außerhalb des Bereichs oder ist ungültig.
+*Warnung W0013 : Verarbeitung fehlgeschlagen.
+*Warnung W0014 : Angeforderte Bibliothek ist nicht geladen.
+*Warnung W0015 : Angeforderte Datei ist nicht geöffnet.
+*Warnung W0016 : Syntaxfehler im regulären Ausdruck.
+*Warnung W0017 : Unbekannter Fehler im regulären Ausdruck aufgetreten.
+*Warnung W0018 : Es ist notwendig, eine Variable anzugeben.
+*Warnung W0019 : Ganzzahl/Gleitkommazahl durch Null geteilt.
+*Warnung W0020 : Zum Erstellen eines Hashes ist eine gerade Anzahl von Elementen erforderlich.
+*Warnung W0021 : Leeres Here-Dokument gefunden.
+*Warnung W0022 : Here-Dokument-Startsequenz gefunden.
+*Warnung W0023 : Während der Wiederherstellung von Variablen gingen einige Informationen verloren.
+*Warnung W0024 : Hashes können nicht mit den Operatoren - * / % verwendet werden.
+*Warnung W0025 : Die Datei konnte nicht geöffnet werden.
+*Warnung W0026 : Die Daten konnten nicht analysiert werden.
+*Warnung W0027 : Der Wert kann nicht in JSON/XML/YAML/TOML umgewandelt werden.
+*Warnung W0028 : Warnung durch #warning.
+*Warnung W0029 : Der SQLite-Vorgang ist fehlgeschlagen.
+*Warnung W0030 : Es wurden mehr Werte als Parameter übergeben. Die überzähligen Werte werden nicht verwendet.
+*Warnung W0031 : Der Name nach % entspricht weder einer Funktion noch einer im Wörterbuch geschriebenen Variable und wird daher als normaler Text behandelt (embed.lazy,off). Zur Laufzeit erzeugte Variablen mit %(Name) einbetten.
+//
+// Hinweiszeichenketten (Deutsch)
+!!!msgn
+*Hinweis N0000 : Die Variablenwerte der vorherigen Sitzung wurden nicht wiederhergestellt.
+*Hinweis N0001 : Ungültiger Zeichensatz wurde angegeben. Stattdessen wird die Standardeinstellung des Betriebssystems verwendet.
+*Hinweis N0002 : Kein Wörterbuch zum Laden vorhanden. Läuft im Shell-Modus, der das Ergebnis von EVAL auf die request-Eingabe zurückgibt.
+//
+// Sonstige Protokollzeichenketten (Deutsch)
+!!!msgj
+*// AYA-Anfrageprotokoll\n// Ladezeit:
+*// Entladezeit:
+// Fehlende Nummer
+*
+//
+*// Laden der Wörterbuchdatei\n
+*// Parser-Bericht (@:Funktion,$:Systemfunktion,#:Array)\n\n
+*// Variablendefinitionsbericht\n
+*// Laden des Variablenwerts
+*// Speichern des Variablenwerts
+*// ...Fertig.\n\n
+*// Analyse des Wörterbuchs\n
+*// Wörterbuchfehler gefunden : Laden im Notfallmodus...\n
+*// Wörterbuchfehler gefunden : Notfallmodus geladen.\n
+//

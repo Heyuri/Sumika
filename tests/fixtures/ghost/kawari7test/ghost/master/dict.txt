@@ -1,0 +1,30 @@
+# Kawari7 Test: a synthetic Phase 7 dictionary
+# no defaults for what save.txt holds: $(load) adds words to an entry, it does not replace them
+system.OnLoad : $(load save.txt)$(set bootcount $(expr $(if ${bootcount} ${bootcount} 0) + 1))
+system.OnUnload : $(save save.txt counter bootcount)
+event.OnFirstBoot : \0\s[0]はじめまして、${system.Ghost}です。\1\s[10]ケロだよ。\e
+event.OnBoot : \0\s[0]${bootcount}回目の起動です。\e
+event.OnClose : \0\s[0]またね。\-\e
+event.OnTest : ${system.Reference0}|${system.Reference1}|${system.Reference7}|${system.Sender}|${system.Sender.Path}|${system.EventName}\e
+event.OnCount : $(set counter $(expr $(if ${counter} ${counter} 0) + 1))${counter}\e
+event.OnSave : $(save save.txt counter bootcount)saved\e
+event.OnTalk : $(set system.communicate ${talkto})$(set system.Response0 ソ表)話しかけ\e
+talkto : おと
+event.OnOther : ${system.OtherGhost}\e
+system.OnTranslate : ${system.Sentence}にゃ
+system.OnTeach : 教わった:${system.Sentence}\e
+system.OnResponse : 返事:${system.Sentence}|${system.Sender}|${system.Age}\e
+resource.homeurl : http://example.invalid/kawari7test/
+resource.sakura.recommendsites : 華和梨$(chr 1)http://example.invalid/
+sentence : AIトーク\e
+# %ms-style words: ssp.exe asks GET Word SHIORI/2.0 with Type: \ms, Kawari 7 answers compatible.ms (no compatible.ml or m?)
+compatible.ms : 鈴木
+compatible.m : 何か
+compatible.dms : %msの影
+event.OnWords : \0%ms/%m?/%dms/%ml\e
+# GET String SHIORI/2.5 for ssp.exe's other GetStringShiori reads: the tooltips and `.ext.` properties (Kawari 7
+# looks up resource. + the ID with `_` as `.`, and reads no Reference there)
+resource.balloon.tooltip : ${system.ID}\&[amp]tip\nline
+resource.tooltip : shell-${system.ID}
+resource.property.get : \&[lt]ext\&[gt]
+resource.property.set : stored

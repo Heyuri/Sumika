@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Balloon test page</title>
+<!-- Serve the repository root (not site/) so ../../src and ../../tests resolve:
+     python tools/serve.py --site .   then open http://localhost:8642/site/dev/balloon.html -->
+<style>
+  :root { --bg: #f4f6fb; --fg: #1d2333; --panel: #fff; --line: #d5dbe8; --accent: #3757c8; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #161a24; --fg: #e3e7f2; --panel: #20253a; --line: #343b55; --accent: #8ea6ff; } }
+  :root[data-theme="dark"] { --bg: #161a24; --fg: #e3e7f2; --panel: #20253a; --line: #343b55; --accent: #8ea6ff; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 14px/1.4 system-ui, sans-serif; }
+  main { max-width: 760px; padding: 16px; }
+  textarea { width: 100%; box-sizing: border-box; height: 140px; font: 12px/1.3 ui-monospace, monospace; background: var(--panel); color: var(--fg); border: 1px solid var(--line); }
+  button, select, label { margin: 4px 6px 4px 0; }
+  #char { position: fixed; width: 200px; height: 400px; border: 2px dashed var(--accent); border-radius: 8px; cursor: move;
+          display: grid; place-items: center; color: var(--accent); user-select: none; touch-action: none; }
+  pre { background: var(--panel); border: 1px solid var(--line); padding: 8px; max-height: 200px; overflow: auto; font-size: 12px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Balloon test page</h1>
+  <p>Plays scripts through the balloon module only (no SHIORI, no waits), in the balloon of the ghost <code>?ghost=ID</code> names
+     (default: the site's first ghost; on a site without ghosts, the site's default balloon). Drag the dashed box: it stands in for the character.</p>
+  <select id="sample"></select>
+  <button id="play">Play</button>
+  <label><input type="checkbox" id="append"> start with \C</label>
+  <label><input type="checkbox" id="wrap"> word wrap</label>
+  <button id="input">Input box</button>
+  <button id="comm">Communicate box</button>
+  <button id="wait">Toggle click-wait</button>
+  <textarea id="script" spellcheck="false"></textarea>
+  <pre id="log"></pre>
+</main>
+<div id="char">character</div>
+<script type="module">
+import { Emitter } from '../../src/core/emitter.js';
+import { SiteIndex } from '../../src/core/loader.js';
+import { setLogLevel } from '../../src/core/log.js';
+import { BalloonSkin, Balloons, Dialogs } from '../../src/balloon/index.js';
+import { play } from '../../tests/balloon/script.mjs';
+
+setLogLevel('debug');
+const SAMPLES = {
+  'Menu (choices placed with _l)': String.raw`\0\s[0]\b[2]\_q\c\*Here's the menu.\n\n\_l[8,@0]\__q[talk]Say something\__q\_l[140,@0]\__q[help]Help\__q\n\_l[8,@6]\__q[settings]Settings\__q\n\_l[8,@6]\__q[close]Close\__q\_q\e`,
+  'First meeting (waits, choices)': String.raw`\1\s[10]\0\c\*\s[0]Oh,\w4 hello.\w8 Nice to meet you.\n\_w[192]I live next door.\w8 What should I call you?\n\n\_q\q[Tell my name,OnName]\n\q[Maybe later,OnLater]\_q\e`,
+  'Fonts (f)': String.raw`\0\_q\c\b[2]\f[height,12]Small text\n\f[height,default]Default size\n\f[color,200,40,40]Red\f[color,default] \f[bold,1]bold\f[bold,0] \f[italic,1]italic\f[italic,0] \f[underline,1]underlined\f[underline,0] \f[strike,1]struck\f[strike,0]\n\f[cursorpencolor,250,250,50]\__q[a]A highlighted anchor\__q\_q\e`,
+  'Board (anchors at absolute _l)': String.raw`\C\0\_q\c\b[2]\*\f[cursorpencolor,50,250,50]\_l[0,0]\__q[c1]( 1 )\__q\_l[60,0]\__q[c2]( 2 )\__q\_l[120,0]\__q[c3]( 3 )\__q\_l[0,40]\__q[c4]( 4 )\__q\_l[60,40]\__q[c5]( 5 )\__q\_l[120,40]\__q[c6]( 6 )\__q\_l[0,80]\__q[c7]( 7 )\__q\_l[60,80]\__q[c8]( 8 )\__q\_l[120,80]\__q[c9]( 9 )\__q\_q\e`,
+  'Inline images (_b: files of the ?ghost= ghost)': String.raw`\0\_q\c\b[2]Replace the names with image files of the ghost given by ?ghost=.\n\_b["img\sample.png",inline]\__q[pic]\_b["img\sample.png",inline,opaque]\__q\n\_b["img\sheet.png",inline,--clipping=0 0 60 74]\_b["img\back.png",48,55,opaque,--option=background]\_q\e`,
+  'Long talk (scrolls)': String.raw`\0\s[0]` + 'This is a long talk that keeps going so that the balloon has to wrap the text and eventually scroll. '.repeat(8) + String.raw`\n\q[Next,next]\q[Close,close]\e`,
+  'Music box (scope 1)': String.raw`\1\s[11]\b[2]\_q\c\![*]\q[Play,play]\n\![*]\q[Stop,stop]\n\![*]\q[Playlist,list]\_q\e`,
+};
+
+const $ = id => document.getElementById(id);
+const out = (...a) => { $('log').textContent = a.map(x => typeof x === 'string' ? x : JSON.stringify(x)).join(' ') + '\n' + $('log').textContent; };
+for (const k of Object.keys(SAMPLES)) $('sample').add(new Option(k, k));
+$('sample').onchange = () => { $('script').value = SAMPLES[$('sample').value]; };
+$('sample').onchange();
+
+const char = $('char');
+const pos = { x: innerWidth - 260, y: innerHeight - 440 };
+class Stage extends Emitter {
+  char(scope) {
+    const r = char.getBoundingClientRect();
+    if (scope === 0) return { rect: { x: r.left, y: r.top, width: r.width, height: r.height }, balloonOffset: { x: 2, y: 14 } };
+    return { rect: { x: r.left - 220, y: r.top + 200, width: 4, height: 4 }, balloonOffset: { x: 0, y: 0 } };
+  }
+}
+const stage = new Stage();
+const place = () => { char.style.left = pos.x + 'px'; char.style.top = pos.y + 'px'; stage.emit('move', { scope: 0 }); stage.emit('move', { scope: 1 }); };
+place();
+let drag = null;
+char.onpointerdown = e => { drag = { x: e.clientX - pos.x, y: e.clientY - pos.y }; char.setPointerCapture(e.pointerId); };
+char.onpointermove = e => { if (drag) { pos.x = e.clientX - drag.x; pos.y = e.clientY - drag.y; place(); } };
+char.onpointerup = () => { drag = null; };
+
+const base = new URL('../', location.href).href;
+// the manifest's name holds its hash: ghosts.json names it (SiteIndex)
+const index = await SiteIndex.load(base);
+const ghostId = new URLSearchParams(location.search).get('ghost') || (index.ghosts[0] && index.ghosts[0].id) || null;
+const ghostFiles = ghostId ? await index.ghostFiles(ghostId) : null;
+const skin = await BalloonSkin.forGhost({ ghost: ghostId && index.ghost(ghostId), ghostFiles, site: index });
+let balloons = null, dialogs = null;
+function make() {
+  if (balloons) balloons.destroy();
+  balloons = new Balloons({ skin, stage, ghostFiles, options: { wordWrap: $('wrap').checked } });
+  balloons.on('link', l => out('link', l));
+  balloons.on('click', c => out('click', c));
+  balloons.on('dblclick', c => { out('dblclick', c); balloons.hideAll(); });
+  balloons.on('hover', h => out('hover', h));
+  if (dialogs) dialogs.balloons = balloons;
+}
+make();
+$('wrap').onchange = make;
+dialogs = new Dialogs({ skin, stage, balloons });
+$('play').onclick = async () => {
+  let s = $('script').value;
+  if ($('append').checked && !s.startsWith('\\C')) s = '\\C' + s;
+  const t0 = performance.now();
+  await balloons.prefetch(s);
+  play(balloons, s);
+  out(`laid out in ${(performance.now() - t0).toFixed(1)} ms`);
+};
+$('input').onclick = async () => out('input', await dialogs.inputBox({ id: 'ユーザ名', defaultText: 'Neighbor', timeoutMs: 20000 }));
+$('comm').onclick = async () => out('communicate', await dialogs.communicateBox({ detailed: true }));
+$('wait').onclick = () => { const v = balloons.get(0); v.showClickWait(!v.clickWait); };
+</script>
+</body>
+</html>

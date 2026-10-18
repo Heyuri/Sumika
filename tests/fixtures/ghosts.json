@@ -1,0 +1,49 @@
+{
+ "format": 1,
+ "comment": "Site index for the ghost-change tests (the shape tools/index_site.py writes): Tsubasa, the synthetic test ghost in tests/fixtures/ghost/testghost (shells master and alt, named Winter: name order master < Winter, folder order alt < master), and a Misaka ghost that exists only here: the ghost whose engine is missing (the runtime has no Misaka engine).",
+ "ghosts": [
+  {
+   "id": "testghost",
+   "name": "Test Ghost",
+   "sakuraName": "Testy",
+   "keroName": "",
+   "craftman": "Sumika tests",
+   "shiori": "satori.dll",
+   "engine": "satori",
+   "thumbnail": null,
+   "shells": [{ "id": "master", "name": "master" }, { "id": "alt", "name": "Winter" }],
+   "defaultShell": "master",
+   "bundledBalloons": [],
+   "balloon": null
+  },
+  {
+   "id": "tsubasa",
+   "name": "Hayama-san Next Door",
+   "sakuraName": "Tsubasa",
+   "keroName": "",
+   "craftman": "Macaroni",
+   "shiori": "satori.dll",
+   "engine": "satori",
+   "thumbnail": "ghost/tsubasa/thumbnail.png",
+   "shells": [{ "id": "master", "name": "master" }],
+   "defaultShell": "master",
+   "bundledBalloons": [{ "dir": "LightBlue", "name": "LightBlue" }],
+   "balloon": "LightBlue"
+  },
+  {
+   "id": "misakaghost",
+   "name": "Misaka Test",
+   "sakuraName": "Misa",
+   "keroName": "",
+   "craftman": "Sumika tests",
+   "shiori": "misaka.dll",
+   "engine": "misaka",
+   "thumbnail": null,
+   "shells": [{ "id": "master", "name": "master" }],
+   "defaultShell": "master",
+   "bundledBalloons": [],
+   "balloon": null
+  }
+ ],
+ "balloons": []
+}

@@ -1,0 +1,52 @@
+# What a contributor makes locally. None of it belongs in the repository (CLAUDE.md "Project rules").
+
+# npm install, and the toolchains the builds use (docs/building.md "What the builds need")
+node_modules/
+toolchain/
+
+# generated: the admin tool's bundles and unpacked runtimes, its programs, the engine builds' work folders
+admin/build/
+admin/dist/
+engines/*/build/
+
+# Python's caches (tools/, engines/, wherever a tool ran)
+__pycache__/
+
+# ghosts: site/ghost/ starts empty, and a local site adds its own (docs/guide.md "Adding a ghost")
+site/ghost/*
+!site/ghost/.gitkeep
+
+# what adding ghosts writes into the index: their manifests and packs, and those of the balloons they bring. The
+# index of the repository's own site (no ghost, the default balloon) stays versioned, so a fresh clone serves at
+# once: ghosts.json and the default balloon's files (don't commit ghosts.json while it lists local ghosts)
+site/sumika/index/*
+!site/sumika/index/ghosts.json
+!site/sumika/index/balloon.sumika.*
+
+# a publisher's own files: the storage hub's list of pages, SSP's word list, the record of Kawari ghosts added from
+# their archives, and a write of one of them cut off before its rename
+site/sumika/hub.json
+site/sumika/word_compatible.txt
+site/sumika/kawari-shipped.json
+site/sumika/*.tmp-*
+
+# tools/prune.mjs's ledger beside a site folder (site.published.json), and one the admin tool set aside
+*.published.json
+*.published.json.broken-*
+
+# development material that is not in the repository (CLAUDE.md "Project rules"): ghost-derived test data, research
+# scratch files, and the reference SF2 the MIDI pins describe
+tests/corpus/
+tests/balloon/fixtures/golden.json
+tests/balloon/fixtures/corpus.json.gz
+tests/shell/fixtures/renders/
+docs/research/scratch/
+vendor/generaluser-gs-2.0.3/GeneralUser-GS.sf2
+
+# local editor and agent settings
+.claude/
+
+# OS litter
+Thumbs.db
+desktop.ini
+.DS_Store

@@ -1,0 +1,55 @@
+// yayatest: a minimal SHIORI/3.0 framework of our own, for the Sumika tests (tests/yaya_engine.test.mjs,
+// tests/runtime/yaya_integration.test.mjs). load counts boots and caches the event list from the function table (as
+// emily4's template caches its translation tables), request calls the event function, unload stamps the time and
+// erases `dll` (as the template erases SAORI.DllList).
+
+load
+{
+	boots += 1
+	bootsec = GETSECCOUNT()
+	ticks = 0
+	dll = IARRAY
+	evlist = GETFUNCLIST('On')
+}
+
+unload
+{
+	lastunload = GETSECCOUNT()
+	_r = ERASEVAR('dll')
+}
+
+// GET / NOTIFY SHIORI/3.0: ID and Reference* go into `reference`; an ID without 'On' calls On_<ID> (a resource, or a
+// NOTIFY such as installedghostname). An empty value answers 204.
+request
+{
+	_lines = SPLIT(_argv[0], CHR(13, 10))
+	_id = ''
+	reference = IARRAY
+	foreach _lines; _l {
+		_c = STRSTR(_l, ': ', 0)
+		if _c > 0 {
+			_key = SUBSTR(_l, 0, _c)
+			_val = SUBSTR(_l, _c + 2, STRLEN(_l))
+			if _key == 'ID' {
+				_id = _val
+			}
+			elseif SUBSTR(_key, 0, 9) == 'Reference' {
+				reference[TOINT(SUBSTR(_key, 9, 9))] = _val
+			}
+		}
+	}
+	_ev = _id
+	if SUBSTR(_id, 0, 2) != 'On' {
+		_ev = 'On_' + _id
+	}
+	_value = ''
+	if ISFUNC(_ev) == 1 {
+		_value = TOSTR(EVAL(_ev))
+	}
+	if _value == '' {
+		'SHIORI/3.0 204 No Content' + CHR(13, 10) + 'Charset: UTF-8' + CHR(13, 10) + CHR(13, 10)
+	}
+	else {
+		'SHIORI/3.0 200 OK' + CHR(13, 10) + 'Charset: UTF-8' + CHR(13, 10) + 'Value: ' + _value + CHR(13, 10) + CHR(13, 10)
+	}
+}

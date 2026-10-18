@@ -1,0 +1,111 @@
+# -*- makefile -*-
+
+# 使用するツール類の設定
+CXX = g++
+LD = g++
+STRIP = strip
+MKDEP = mkdep
+
+# 作るライブラリ名の設定
+# Linux / BSD 用の設定で、libsatori.so を生成する。
+# macOS 用は makefile.posix（.bundle を生成する）。
+DYLIB_NAME_PREFIX = lib
+DYLIB_NAME_POSTFIX = .so
+
+# 追加するフラグ。
+# LDFLAGS は dlopen 可能なライブラリを作れる設定にしなければならない。
+# Linux / BSD なら -shared。
+# -fvisibility=hidden は load / request などの入口（SakuraDLLHost.cpp の SATORI_EXPORT）以外を
+# 公開しないため。内部の関数がホスト側の同名の関数と入れ替わらないようにする。
+CXXFLAGS = -O3 -Wall -Wno-unknown-pragmas -std=c++11 -fvisibility=hidden -fvisibility-inlines-hidden
+LDFLAGS = -shared
+LIBS = -ldl
+
+
+################## これより下は弄らなくてもコンパイル出来ます ##################
+CXXFLAGS_ADD = -DPOSIX -DSATORI_DLL -fPIC
+LIBSATORI_OBJ = \
+	../_/Sender.o \
+	../_/charset.o \
+	../_/Utilities.o \
+	../_/calc.o \
+	../_/calc_float.o \
+	../_/stltool.o \
+	../_/mt19937ar.o \
+	../_/random.o \
+	SakuraCS.o \
+	SakuraClient.o \
+	SakuraDLLClient.o \
+	SakuraDLLHost.o \
+	SaoriClient.o \
+	SaoriHost.o \
+	satori.o \
+	satoriTranslate.o \
+	satori_AnalyzeRequest.o \
+	satori_builtin.o \
+	satori_CreateResponce.o \
+	satori_EventOperation.o \
+	satori_Kakko.o \
+	satori_load_dict.o \
+	satori_load_unload.o \
+	satori_sentence.o \
+	satori_tool.o \
+	shiori_plugin.o \
+	ssu.o \
+	$(NULL)
+
+LIBSATORI = $(DYLIB_NAME_PREFIX)satori$(DYLIB_NAME_POSTFIX)
+
+all: $(LIBSATORI)
+
+# makeがmakefile自体をリメイクしようとして%.oにマッチしないようにする
+$(MAKEFILE_LIST): ;
+
+depend:
+	mkdep $(CXXFLAGS) $(CXXFLAGS_ADD) -I. -I../_ $(LIBSATORI_OBJ:.o=.cpp)
+
+clean:
+	rm -rf $(U8DIR)
+	rm -f $(LIBSATORI) $(LIBSATORI_OBJ)
+
+$(LIBSATORI): $(LIBSATORI_OBJ)
+	$(LD) -o $@ $(LIBSATORI_OBJ) $(LDFLAGS) $(LIBS)
+	$(STRIP) -x $@
+
+# ソースはShift_JISなので、UTF-8に変換したコピー($(U8DIR))をコンパイルする。
+# （clangはShift_JISのワイド文字列リテラルを扱えないため）
+# GNU make と iconv が必要。
+ICONV = iconv -f CP932 -t UTF-8
+U8DIR = utf8src
+
+$(U8DIR)/.stamp: $(wildcard *.cpp *.h ../_/*.cpp ../_/*.h ../deelx/*.h)
+	rm -rf $(U8DIR)
+	mkdir -p $(U8DIR)/satori $(U8DIR)/_ $(U8DIR)/deelx
+	for f in *.cpp *.h; do $(ICONV) $$f > $(U8DIR)/satori/$$f || exit 1; done
+	for f in ../_/*.cpp ../_/*.h; do $(ICONV) $$f > $(U8DIR)/_/`basename $$f` || exit 1; done
+	for f in ../deelx/*.h; do $(ICONV) $$f > $(U8DIR)/deelx/`basename $$f` || exit 1; done
+	touch $@
+
+../_/%.o: $(U8DIR)/.stamp
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_ADD) -I$(U8DIR)/satori -I$(U8DIR)/_ -o $@ -c $(U8DIR)/_/$*.cpp
+
+%.o: $(U8DIR)/.stamp
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_ADD) -I$(U8DIR)/satori -I$(U8DIR)/_ -o $@ -c $(U8DIR)/satori/$*.cpp
+
+DESTDIR = satori-src
+dist:
+	rm -rf $(DESTDIR)
+	mkdir -p $(DESTDIR)
+	cp -f ../satori_license.txt $(DESTDIR)
+	mkdir -p $(DESTDIR)/_
+	cp -f ../_/*.cpp ../_/*.h $(DESTDIR)/_
+	mkdir -p $(DESTDIR)/deelx
+	cp -f ../deelx/*.h $(DESTDIR)/deelx
+	mkdir -p $(DESTDIR)/satori
+	cp -f *.cpp *.h makefile.* *.html *.dsp *.dsw $(DESTDIR)/satori
+	mkdir -p $(DESTDIR)/satori/test
+	cp -f test/*.txt test/*.ini $(DESTDIR)/satori/test
+	zip -r $(DESTDIR).zip $(DESTDIR)
+	rm -rf $(DESTDIR)
+
+.PHONY: all clean depend dist

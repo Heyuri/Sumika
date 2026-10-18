@@ -1,0 +1,10 @@
+{
+ "kawari": "8.2.8",
+ "treePin": "b15b97d814d7d94b695e4951bf9af43b6a05ad34d0a6a91f9466cd9a4df2a7b0",
+ "zipSha256": "32416386aca63b94842120808d501838f812efdf6ea5f9dd1659c1bff848ab02",
+ "drift": false,
+ "emcc": "6.0.11 (a0014542110d6078c3a1a7941fa1ddb3a2281f16)",
+ "patches": 42,
+ "opt": "O2",
+ "debug": false
+}

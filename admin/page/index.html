@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light dark">
+<title data-t="app.title"></title>
+<style>/*@@SUMIKA_ADMIN_STYLE@@*/</style>
+</head>
+<body>
+<header class="top">
+  <h1 class="app-name" data-t="app.title"></h1>
+  <nav data-t-aria-label="nav.label">
+    <ul>
+      <li><button type="button" data-screen="site" data-t="nav.site"></button></li>
+      <li><button type="button" data-screen="ghosts" data-t="nav.ghosts"></button></li>
+      <li><button type="button" data-screen="add" data-t="nav.add"></button></li>
+      <li><button type="button" data-screen="sharing" data-t="nav.sharing"></button></li>
+      <li><button type="button" data-screen="check" data-t="nav.check"></button></li>
+      <li><button type="button" data-screen="preview" data-t="nav.preview"></button></li>
+    </ul>
+  </nav>
+  <div class="tools">
+    <div class="langs" role="group" data-t-aria-label="lang.label">
+      <button type="button" data-lang="ja" lang="ja" data-t="lang.ja"></button>
+      <button type="button" data-lang="en" lang="en" data-t="lang.en"></button>
+    </div>
+    <button type="button" id="quit" class="quit" data-t="app.quit" data-t-title="app.quitTitle"></button>
+  </div>
+</header>
+<div id="banner" class="banner" role="alert" tabindex="-1" hidden></div>
+<p id="waiting" class="waiting" role="status" hidden></p>
+<main id="main">
+  <div id="notices"></div>
+
+  <section id="screen-site" aria-labelledby="h-site" hidden>
+    <h2 id="h-site" tabindex="-1" data-t="site.heading"></h2>
+    <div data-part="messages"></div>
+    <div data-part="info"></div>
+    <p class="actions">
+      <button type="button" data-part="choose" data-t="site.choose"></button>
+      <button type="button" class="link" data-part="in-page" data-t="common.inPage" hidden></button>
+    </p>
+    <div data-part="pick-wait" aria-live="polite"></div>
+    <div data-part="pick" class="pick" hidden>
+      <h3 data-t="site.chooseHeading"></h3>
+    </div>
+    <h3 data-t="settings.heading"></h3>
+    <div data-part="settings"></div>
+  </section>
+
+  <section id="screen-ghosts" aria-labelledby="h-ghosts" hidden>
+    <h2 id="h-ghosts" tabindex="-1" data-t="ghosts.heading"></h2>
+    <div data-part="messages"></div>
+    <div data-part="body"></div>
+  </section>
+
+  <section id="screen-add" aria-labelledby="h-add" hidden>
+    <h2 id="h-add" tabindex="-1" data-t="add.heading"></h2>
+    <div data-part="read-only"></div>
+    <div data-part="messages"></div>
+    <section class="sources" data-part="sources" aria-labelledby="h-add-browse" hidden>
+      <h3 id="h-add-browse" data-t="add.browse"></h3>
+      <div data-part="pickers" hidden>
+        <p class="actions">
+          <button type="button" class="primary" data-part="pick-files" data-t="add.pickFiles"></button>
+          <button type="button" class="primary" data-part="pick-folders" data-t="add.pickFolders"></button>
+        </p>
+        <p class="hint" data-t="add.pickHint"></p>
+        <div data-part="pick-wait" aria-live="polite"></div>
+      </div>
+      <div class="pick-row" data-part="pick-row">
+        <div class="browse" data-part="browse" hidden></div>
+        <div class="dropzone" data-part="drop" role="region" data-t-aria-label="add.dropLabel" hidden>
+          <p data-part="drop-text"></p>
+        </div>
+      </div>
+      <p data-part="in-page-row" hidden><button type="button" class="link" data-part="in-page" data-t="common.inPage"></button></p>
+    </section>
+    <div class="sending" data-part="sending" hidden>
+      <p data-part="sending-text" role="status"></p>
+      <progress data-part="sending-bar" data-t-aria-label="status.progress"></progress>
+      <button type="button" data-part="stop" data-t="drop.stop"></button>
+    </div>
+    <div class="pick" data-part="compare" hidden></div>
+    <h3 data-part="results-head" tabindex="-1" data-t="add.results"></h3>
+    <div data-part="results"></div>
+    <p class="actions">
+      <button type="button" class="primary" data-part="go" aria-describedby="add-none-ready"></button>
+      <button type="button" data-part="clear" data-t="add.clear"></button>
+      <span id="add-none-ready" class="hint" data-part="none-ready"></span>
+    </p>
+  </section>
+
+  <section id="screen-sharing" aria-labelledby="h-sharing" hidden>
+    <h2 id="h-sharing" tabindex="-1" data-t="sharing.heading"></h2>
+    <p data-t="sharing.intro"></p>
+    <div data-part="messages"></div>
+    <div data-part="state"></div>
+    <fieldset data-part="editor" class="rows">
+      <legend data-t="sharing.list"></legend>
+      <ol data-part="rows"></ol>
+      <p class="actions">
+        <button type="button" data-part="add" data-t="sharing.addRow"></button>
+        <button type="button" class="primary" data-part="save" data-t="sharing.save"></button>
+      </p>
+      <p data-part="save-msg" role="status"></p>
+    </fieldset>
+    <p class="field">
+      <label for="sharing-host" data-t="sharing.host"></label>
+      <input type="text" id="sharing-host" data-part="host" inputmode="url" spellcheck="false" autocomplete="off"
+        autocapitalize="off" aria-describedby="sharing-host-problem" data-t-placeholder="sharing.hostPlaceholder">
+      <span class="problem" id="sharing-host-problem" data-part="host-problem"></span>
+    </p>
+    <p class="control"><span data-t="sharing.control"></span> <code data-part="control"></code></p>
+    <p class="hint" data-t="sharing.controlHint"></p>
+    <div data-part="control-state"></div>
+    <p class="field">
+      <label for="sharing-default" data-t="sharing.default"></label>
+      <select id="sharing-default" data-part="default-state" aria-describedby="sharing-default-hint">
+        <option value="" data-t="sharing.default.shown"></option>
+        <option value="tucked" data-t="sharing.default.tucked"></option>
+        <option value="off" data-t="sharing.default.off"></option>
+      </select>
+    </p>
+    <p class="hint" id="sharing-default-hint" data-part="default-hint"></p>
+    <p data-t="sharing.snippet"></p>
+    <pre class="snippet"><code data-part="snippet"></code></pre>
+    <p class="actions">
+      <button type="button" data-part="copy" data-t="sharing.copy"></button>
+      <span data-part="copy-msg" role="status"></span>
+    </p>
+    <h3 data-t="sharing.notes"></h3>
+    <ul data-part="notes" class="notes"></ul>
+  </section>
+
+  <section id="screen-check" aria-labelledby="h-check" hidden>
+    <h2 id="h-check" tabindex="-1" data-t="check.heading"></h2>
+    <p data-t="check.intro"></p>
+    <div data-part="read-only"></div>
+    <div data-part="messages"></div>
+    <p class="actions"><button type="button" class="primary" data-part="run" data-t="check.run"></button></p>
+    <div data-part="result"></div>
+    <p class="actions">
+      <button type="button" data-part="prepare" data-t="prepare.run" aria-describedby="prepare-needs"></button>
+      <span id="prepare-needs" class="hint" data-part="needs"></span>
+    </p>
+    <div data-part="question" hidden>
+      <fieldset data-part="question-text"></fieldset>
+      <p class="actions">
+        <button type="button" class="primary" data-part="go" data-t="prepare.go"></button>
+        <button type="button" data-part="cancel" data-t="common.cancel"></button>
+      </p>
+    </div>
+    <div data-part="prepared"></div>
+  </section>
+
+  <section id="screen-preview" aria-labelledby="h-preview" hidden>
+    <h2 id="h-preview" tabindex="-1" data-t="preview.heading"></h2>
+    <p data-t="preview.intro"></p>
+    <div data-part="messages"></div>
+    <p class="actions">
+      <button type="button" class="primary" data-part="start" data-t="preview.start"></button>
+      <button type="button" data-part="stop" data-t="preview.stop"></button>
+    </p>
+    <p data-part="state" role="status"></p>
+    <ul data-part="links" class="links"></ul>
+    <p data-part="note" class="hint"></p>
+  </section>
+</main>
+
+<dialog id="remove-dialog" aria-labelledby="remove-title">
+  <h2 id="remove-title" data-t="remove.title"></h2>
+  <div data-part="text"></div>
+  <p class="actions">
+    <button type="button" data-cancel data-t="common.cancel"></button>
+    <button type="button" class="danger" data-confirm data-t="remove.confirm"></button>
+  </p>
+</dialog>
+
+<footer class="bottom">
+  <div class="status-bar">
+    <p id="status" class="status" role="status" aria-live="polite" data-t-aria-label="status.label"></p>
+    <progress id="progress" data-t-aria-label="status.progress" hidden></progress>
+    <p id="status-item" class="status-item"></p>
+  </div>
+  <p id="version" class="version"></p>
+</footer>
+<script>/*@@SUMIKA_ADMIN_SCRIPT@@*/</script>
+</body>
+</html>

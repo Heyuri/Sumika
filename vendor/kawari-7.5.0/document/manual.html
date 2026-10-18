@@ -1,0 +1,849 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<HTML lang="ja">
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=SHIFT_JIS">
+<META http-equiv="Content-Script-Type" content="text/javascript">
+<META http-equiv="Content-Style-Type" content="text/css">
+<TITLE>華和梨基本マニュアル</TITLE>
+
+<STYLE>
+<!--
+BODY {
+	padding: 1em 8% 1em 8%;
+	line-height: 140%;
+}
+PRE {
+	padding: 8px;
+	margin: 0;
+	border-width: 2px;
+	border-color: #a0a0ff;
+	border-style: solid;
+}
+P {
+	text-indent: 1em;
+	line-height: 140%;
+}
+TABLE{
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+CAPTION{
+	padding-top: 8px;
+	padding-left: 2em;
+	font-weight: bold;
+	text-allign: left;
+}
+TR TD{
+	vertical-align: top;
+	text-align: left;
+}
+TR.genre{
+	font-style: italic;
+	text-indent: 1em;
+}
+
+H2 {
+	border-color: #6060c0;
+	border-width: 2px 2px 2px 1em;
+	padding: 0.1em 0 0.1em 0.5em;
+	border-style: solid;
+}
+
+H3 {
+	border-color: #6060c0;
+	border-width: 0 0 1px 0;
+	border-style: solid;
+	padding-left: 1em;
+}
+
+
+A { text-decoration: none; }
+A:link { color: #7070ff; }
+A:visited { color: #7070ff; }
+A:hover { color: orange; text-decoration: underline; }
+A:active { background: crimson; color: white; }
+
+DIV.title{
+	width: 90%;
+	text-align: left;
+}
+
+P.h1 { font: 700 140%;  }
+P.pre {
+	text-indent: 0;
+	font-family: sans-serif;
+	font-size: 90%;
+	padding: 8px;
+	margin: 0;
+	border-width: 2px;
+	border-color: #a0a0ff;
+	border-style: solid;
+}
+TABLE.command_table {
+	padding: 8px;
+	border-width: 2px;
+	border-color: #ffa0a0;
+	border-style: solid;
+}
+TABLE.command_table CAPTION{
+	background: #ffa0a0;
+}
+TABLE.command_table TR.genre{
+	color: #4040ff;
+}
+
+TABLE.command {
+	padding: 8px;
+	border-width: 2px;
+	border-color: #a0a0ff;
+	border-style: solid;
+}
+TABLE.command CAPTION{
+	background: #a0a0ff;
+}
+
+SPAN.tt {
+	font-family: monospace;
+}
+// -->
+</STYLE>
+<BODY text="black" bgcolor="white">
+
+<DIV align="center">
+<DIV class="title">
+	<P class="h1">
+	プログラマブル準AIモジュール
+	</P><P class="h1">
+	「"華和梨" for あれ以外の何か以外の何か」<BR>
+	基本マニュアル
+        </P>
+	<DIV align="right">
+		<P>
+		2003/02/16<BR>
+		Phase 7.5.0
+		</P><P>
+		華和梨開発チーム<BR><BR>
+		NAKAUE.T (Meister)<BR>
+		夢乃 (偽Meister)<BR>
+		酔狂<BR>
+		さとー<BR>
+		さくらのにえ
+		</P>
+	</DIV>
+</DIV>
+</DIV>
+
+<H2>Index</H2>
+
+<BLOCKQUOTE>
+<A href="#install">1. インストール</A><BR>
+<A href="#datafile">2. ファイルについて</A><BR>
+<A href="#kawariini">3. kawari.ini</A><BR>
+　<A href="#inifile">3.1. kawari.iniファイルの書き方</A><BR>
+　<A href="#iniinclude">3.2. 外部ファイルの取り込み</A><BR>
+　<A href="#iniadddict">3.3. 辞書への単語追加</A><BR>
+　<A href="#initext">3.4. テキストファイルの読み込み</A><BR>
+　<A href="#inidebug">3.5. デバッグ用の動作モード指定</A><BR>
+　<A href="#inisecurity">3.6. セキュリティレベルの指定</A><BR>
+　<A href="#inisaori">3.7. SAORIモジュールの読み込み</A><BR>
+　<A href="#inii18n">3.8. 文字コード指定</A><BR>
+<A href="#dict">4. 辞書</A><BR>
+　<A href="#dictfile">4.1. 辞書ファイルの書き方</A><BR>
+　<A href="#doublequote">4.2. ダブルクォート</A><BR>
+　<A href="#entrycall">4.3. エントリ呼び出し</A><BR>
+　<A href="#historycall">4.4. 履歴参照</A><BR>
+　<A href="#systementry">4.5. システムエントリ</A><BR>
+　<A href="#evententry">4.6. イベントエントリ</A><BR>
+　<A href="#matchentry">4.7. マッチエントリとCOMMUNICATE</A><BR>
+　<A href="#resourceentry">4.8. リソースエントリ</A><BR>
+<A href="#inlinescript">5. インラインスクリプト</A><BR>
+<A href="#crypt">6. 暗号化辞書</A><BR>
+</BLOCKQUOTE>
+
+<A name="install"></A>
+<H2>1. インストール</H2>
+
+<P>
+ゴーストのディレクトリに、以下のファイルを置いて下さい。
+</P>
+
+<DIV align="center">
+<TABLE width="80%">
+<TR><TD>shiori.dll</TD><TD>"華和梨"そのもの(必須)</TD></TR>
+<TR><TD>kawari.ini</TD><TD>設定ファイル(必須)</TD></TR>
+<TR><TD>dict-*.txt</TD><TD>辞書ファイル</TD></TR>
+<TR><TD>ghost-*.txt</TD><TD>"華和梨"辞書形式のゴースト会話データファイル</TD></TR>
+</TABLE>
+</DIV>
+
+
+<A name="datafile"></A>
+<H2>2. ファイルについて</H2>
+
+<P>
+"華和梨"のデータファイルには、設定ファイルと辞書ファイルの二種類があります。<BR>
+設定ファイルkawari.iniは、"華和梨"が読み込むべき辞書ファイルを指定します。<BR>
+辞書ファイルは、会話文データと会話文で用いる単語データを収めるファイルです。
+辞書ファイルの数やファイル名には、特に制限はありません。kawari.ini中で指定
+しただけ、全てのファイルが読み込まれます。<BR>
+ただし、他のファイルとの衝突を防ぐため、単語データが主の辞書ファイルの名前を
+「dict-*.txt」、会話データが主の辞書ファイルの名前を「ghost-*.txt」とすること
+を"推奨" ("華和梨"はプログラム自体は汎用的に作っておき、ユーザー側の使用方法を
+"推奨" することによって規格を作っている部分が多々あります。)します。
+</P>
+
+
+
+<A name="kawariini"></A>
+<H2>3. kawari.ini</H2>
+
+<P>
+kawari.iniファイルは"華和梨"が読み込むべき辞書や、"華和梨"の動作モードを
+指定するファイルで、必ず用意する必要があります。
+</P>
+
+<A name="inifile"></A>
+<H3>3.1. kawari.iniファイルの書き方</H3>
+
+<P>
+一行に「dict :  ファイル名」の形で読み込むべき辞書ファイル名を指定します。
+「#」から始まる行はコメントとして無視します。<BR>
+これ以外の文字で始まる行も、"華和梨"が解釈できない場合は無視します。しかし、
+将来の機能拡張の際、問題が起こる可能性があります。
+</P>
+
+<BLOCKQUOTE><PRE>
+    # 「華和梨ゴースト」設定ファイル
+    
+    # 辞書基本フレームワーク
+    dict : dict-base.txt
+    
+    # 台本 (ゴースト依存)
+    dict : ghost-kawari.txt
+    
+    # 標準辞書
+    dict : dict-standard.txt
+    dict : dict-dms.txt
+</PRE></BLOCKQUOTE>
+
+
+<A name="iniinclude"></A>
+<H3>3.2. 外部ファイルの取り込み</H3>
+
+<P>
+kawari.iniファイルの途中で、他のファイルの内容を取り込むことが出来ます。
+「include : ファイル名」で指定します。
+</P>
+
+<BLOCKQUOTE><PRE>
+    # 外部iniファイル「keeps.ini」を取り込む
+    include : keeps.ini
+</PRE></BLOCKQUOTE>
+
+
+<A name="iniadddict"></A>
+<H3>3.3. 辞書への単語追加</H3>
+
+<P>
+本来、辞書への単語追加は辞書ファイルの役割ですが、簡単なものならkawari.iniファイルの
+中でも追加することが出来ます。
+「adddict : エントリ名 単語」で指定します。
+</P>
+
+<BLOCKQUOTE><PRE>
+    # エントリ「author」に「まいすたー」を追加する
+    addict : author まいすたー
+    # エントリ「author」に「偽Meister」を追加する
+    addict : author 偽Meister
+</PRE></BLOCKQUOTE>
+
+<P>
+「set : エントリ名 単語」と記述した場合には、エントリの内容が一度消去されてから
+単語がセットしなおされます。
+</P>
+
+<BLOCKQUOTE><PRE>
+    # エントリ「myname」に「二葉亭四迷」を
+    # エントリ「keroname」に「江戸川乱歩」をセットする
+    set : myname 二葉亭四迷
+    set : keroname 江戸川乱歩
+</PRE></BLOCKQUOTE>
+
+
+<A name="initext"></A>
+<H3>3.4. テキストファイルの読み込み</H4>
+
+<P>
+Phase 7.1.2から、辞書ファイルと同じようにテキストファイルを読めます。
+テキストファイルをエントリに格納する方式は、textloadコマンドと同じです。
+「text : エントリ名 ファイル名」と指定します。
+</P>
+
+<BLOCKQUOTE><PRE>
+    # エントリ「spell」にテキストファイル「necronomicon.txt」を読み込む
+    text : spell necronomicon.txt
+</PRE></BLOCKQUOTE>
+
+<A name="inidebug"></A>
+<H3>3.5. デバッグ用の動作モード指定</H3>
+
+<P>
+以下の記述は特別な意味を持ちます。どれもデバッグ目的ですので、普通は
+kawari.iniに記述する必要はありません。
+</P>
+
+<DL>
+<DT>debug : log</DT>
+<DD>shiori.dllと同じフォルダに、「kawari.log」というファイルを作ります。この
+ファイルには発生したイベントと、それに対する"華和梨"の応答が記録されます。
+辞書のデバッグの際に記述します。</DD>
+<DT>debug : debugger</DT>
+<DD>デバッガを使用可能にします。"華和梨"と同時に配布している、コンソール版
+"華和梨"インタプリタ「幸水」をデバッガとして使用する際に記述します。
+詳細は「幸水」のマニュアルを参照下さい。</DD>
+<DT>randomseed : ＜数字＞</DT>
+<DD>"華和梨"の乱数の種を指定し、特定パターンの乱数列を発生させます。
+スクリプトのデバッグに使用することができます。</DD>
+</DL>
+
+
+<A name="inisecurity"></A>
+<H3>3.6. セキュリティレベルの指定</H3>
+
+<P>
+以下の記述は「何か。」からのイベント通知に対する、セキュリティレベルを
+指定するために使用します。省略した場合、自動的にredo period 20以降で安全な設定に
+なるので、普通はkawari.iniに記述する必要はありません。
+</P>
+
+<DL>
+<DT>security : 0</DT>
+<DD>"External"も含めすべて許可する。</DD>
+<DT>security : 1</DT>
+<DD>予約済み、とりあえず2と同じ。</DD>
+<DT>security : 2</DT>
+<DD>セキュリティレベルを指定しない場合の標準設定。<BR>
+"External"以外のイベントを許可する。</DD>
+<DT>security : 3</DT>
+<DD>ローカルマシン発行のイベントのみ許可する。</DD>
+</DL>
+
+<P>
+セキュリティレベルが3未満の場合、クラッキング対策としてsystem.OnLoad
+エントリを評価後は、resource.homeurlエントリが書き換えられないように
+なっています。普通はこれが問題になることはありません。
+</P>
+
+<A name="inisaori"></A>
+<H3>3.7. SAORIモジュールの読み込み</H3>
+
+<P>
+以下の記述は、SAORI規格の機能拡張モジュールを組み込む時に使用します。
+</P>
+
+<BLOCKQUOTE><P>
+saori : ＜SAORIモジュール名＞, ＜エイリアス＞ [ , ＜オプション＞]
+</P></BLOCKQUOTE>
+
+<DL>
+<DT>SAORIモジュール名(必須)</DT>
+<DD>
+SAORIモジュールのファイル名を記述します。拡張子(「.dll」等)を含めます。
+"華和梨"の存在するフォルダからの相対パスで記述します。
+</DD>
+<DT>エイリアス(必須)</DT>
+<DD>
+実際にSAORIモジュールを使用する際、
+使用するモジュールを区別するために使用します。
+複数のSAORIモジュールを使う場合、モジュールごとに別の名前を付けてください。
+また、モジュールを一つだけ使う場合も、必ずエイリアスが必要です。
+</DD>
+<DT>オプション(省略可能)</DT>
+<DD>
+SAORIモジュールを読み込むタイミングを指定します。
+「preload」で直ちにに読み込み、
+「loadoncall」でモジュールを使用する直前に読み込み、
+「noresident」でモジュールを使用する直前に読み込み・使用後に切り離しです。
+省略した場合、「loadoncall」と等価です。<BR>
+使用するSAORIモジュールのマニュアルに注意書きがない場合、
+通常はオプションを省略して構いません。
+</DD>
+</DL>
+
+<P>
+SAORIモジュールは、KISで実際に使用する前に組み込む必要があります。
+この記述か、KISのsaoriregistコマンドで組み込んで下さい。
+</P>
+
+<BLOCKQUOTE><PRE>
+    # 七瀬いーうぃ氏作のsaori_cpuid.dllを直ちに読み込む
+    saori : saori_cpuid.dll , cpuid , preload
+
+    # 橋本孔明氏作のoption.dllを読み込む
+    # モジュールを読み込むのは「callsaori(x) option」を実行する直前
+    saori : option.dll , option
+</PRE></BLOCKQUOTE>
+
+
+<A name="inii18n"></A>
+<H3>3.8. 文字コード指定</H3>
+
+<P>
+以下の記述は、辞書の文字コードを指定する際に使用します。
+辞書読み込み途中で文字コードが変わる等の不具合を避ける為、
+kawari.iniの先頭で記述して下さい。
+</P>
+
+<BLOCKQUOTE><P>
+locale : ＜文字コード＞
+</P></BLOCKQUOTE>
+
+<P>
+文字コード指定は、以下が有効です。
+省略した場合、Shift_JISを指定したことになります。</DD>
+</P>
+
+<DIV align="center">
+<TABLE width="80%">
+<TR><TD>Shift_JIS</TD><TD>日本語</TD></TR>
+<TR><TD>EUC-KR</TD><TD>Korean</TD></TR>
+<TR><TD>Big5</TD><TD>Chinese-Simplified</TD></TR>
+<TR><TD>GB2312</TD><TD>Chinese-Traditional</TD></TR>
+<TR><TD>ISO-8859-1</TD><TD>西ヨーロッパ諸言語</TD></TR>
+</TABLE>
+</DIV>
+
+
+<A name="dict"></A>
+<H2>4. 辞書</H2>
+
+<P>
+"華和梨"は単語を分類して集めた「辞書」を持っています。
+文字列だけではなく、会話文やインラインスクリプトも全て単語として扱います。
+</P>
+
+<P>
+辞書は起動時に「辞書ファイル」から読み込みます。
+実行中にインラインスクリプトを使って辞書を書き換えることもできます。
+</P>
+
+
+<A name="dictfile"></A>
+<H3>4.1. 辞書ファイルの書き方</H3>
+
+<P>
+注意！！ Phase 6.0から、エントリ名に使用可能な文字種類を変更します。<BR>
+「-」が使用不可になりますので、「.」に置き換えてください。
+</P>
+
+<P>
+一行に「エントリ名 : 単語 , 単語 , ...」の形で単語を登録します。
+「#」から始まる行はコメントとして無視します。
+</P>
+
+<BLOCKQUOTE><PRE>
+    # 会話データ
+    sentence : \h昨日${npw}を${npp}で偶然見かけたよ。\e
+    sentence : \h${npp}良いとこ一度はおいで、はぁーじょいなじょいな。\e
+    # 名詞-固有名詞-人名 ( npw )
+    npw : 鈴木一郎 , 山本太郎
+    # 名詞-固有名詞-地名 ( npp )
+    npp : 首相官邸 , ホワイトハウス
+    npp : ${npw}の家
+</PRE></BLOCKQUOTE>
+
+<P>
+エントリ名は単語の分類を示す物で、"華和梨"に単語の置き換えを指示する時に使います。
+エントリ名に使える文字は英数字(A～Za～z0～9)、ピリオド(.)、アンダーバー(_)、
+漢字です。
+エントリ名の長さや、エントリの個数、辞書ファイルの長さに制限はありません。<BR>
+</P>
+
+<P>
+エントリ名をカンマ「,」で区切って並べ、単語を複数エントリへ一度に
+登録することもできます。
+以下の例は「npp」エントリと「観光名所」エントリの両方に「首相官邸」を登録します。
+</P>
+
+<BLOCKQUOTE><PRE>
+    npp,観光名所 : 首相官邸
+</PRE></BLOCKQUOTE>
+
+<!--
+<P>
+長い単語は、複数行に渡って記述することもできます。
+長い単語の登録は「エントリ名,エントリ名 ... {」と書いた行で始め、「}」だけの行で
+終わります。
+エントリ名と「{」の間には「:」が入らないので注意してください。
+</P>
+
+<BLOCKQUOTE><PRE>
+    speech {
+    色は匂へと散りぬるを 若よ誰そ常ならん
+    有意の奥山 今日越えて 浅き夢見し 酔ゐもせす
+    }
+</PRE></BLOCKQUOTE>
+-->
+
+
+<A name="doublequote"></A>
+<H3>4.2. ダブルクォート</H3>
+
+<P>
+ダブルクォート(")で囲まれた文字列は、常にそのまま出力されます。
+エントリ呼び出し等がダブルクォート内にあっても置き換えを行いません。
+「,」や「${}」「$()」といった"華和梨"で特別の意味を持つ文字列を単語中に
+書き込みたい場合にはダブルクォートを使ってください。<BR>
+Phase 7.2現在、そのままでは単語に含むことが出来ない文字は
+「:;,(!&|)」の8種類です。<BR>
+なお、ダブルクォートの内部でダブルクォートを表記したい場合、
+「\」でエスケープします。具体的には「"\"ABC\""」と記述します。
+</P>
+
+<BLOCKQUOTE><PRE>
+    sentence : Good morning, U.S.A.
+</PRE></BLOCKQUOTE>
+
+<P>
+上記の例では、「Good morning」と「U.S.A.」という二つの単語として登録されます。
+一つに繋がった「Good morning, U.S.A.」として登録したい場合には、以下のように
+してください。
+</P>
+
+<BLOCKQUOTE><PRE>
+    sentence : Good morning"," U.S.A.
+    又は
+    sentence : "Good morning, U.S.A."
+</PRE></BLOCKQUOTE>
+
+
+
+<A name="entrycall"></A>
+<H3>4.3. エントリ呼び出し</H3>
+
+<P>
+「${エントリ名}」という記述を「エントリ呼び出し」と呼びます。
+</P>
+
+<P>
+単語の中で「${エントリ名}」と記述すると、同じエントリに登録されている単語の中から
+任意の一単語を選び出し、置き換えます。
+該当する単語が見つからなかったときは、空白文字列に置き換えます。
+また、置き換えた単語にもエントリ呼び出しが含まれている場合には、再度置き換えを行います。
+<!--
+(「無限ループする指定をしたらどうなるの?」と思ったあなたは鋭い。
+最高30段(プログラム中の定数にて指定)で再帰を打ち切ります。)
+-->
+</P>
+
+<BLOCKQUOTE><PRE>
+    npw : 鈴木一郎 , 山本太郎
+    sentence : ${npw}さん
+</PRE></BLOCKQUOTE>
+
+<P>
+上記の例では、sentenceの内容は「鈴木一郎さん」又は「山本太郎さん」になります。
+</P>
+
+
+<P>
+「${エントリ1&エントリ2}」と記述すると、エントリ1とエントリ2の両方に登録されている
+単語の中から任意の一単語を選び出し、置き換えます。
+</P>
+
+<BLOCKQUOTE><PRE>
+    JRの駅   : 目黒 , 恵比寿 , 渋谷 , 原宿 , 代々木 , 新宿
+    東急の駅 : 目黒 , 大岡山 , 緑ヶ丘 , 自由が丘 , 渋谷
+    sentence : ${JRの駅&東急の駅}で待ち合わせ
+</PRE></BLOCKQUOTE>
+
+<P>
+上記の例では、「${JRの駅&東急の駅}」が「目黒」又は「渋谷」に置き換えられ、
+sentenceは「目黒で待ち合わせ」又は「渋谷で待ち合わせ」になります。
+</P>
+
+
+
+<A name="historycall"></A>
+<H3>4.4. 履歴参照</H3>
+
+<P>
+「${数字}」という特殊なエントリ呼び出しを「履歴参照」と呼びます。
+</P>
+
+<P>
+履歴参照は、同じ文脈で置き換えた単語を再度参照する時に使います。
+</P>
+
+<BLOCKQUOTE><PRE>
+    n : 石
+    food : 梨
+    sentence : ${n}のような${food}、${1}のような${0}。
+</PRE></BLOCKQUOTE>
+
+<P>
+上記の例では、${0}は${n}を置き換えた結果に、${1}は${food}を置き換えた結果に
+なり、sentenceは「石のような梨、梨のような石。」になります。
+</P>
+
+
+
+<A name="systementry"></A>
+<H3>4.5. システムエントリ</H3>
+
+<P>
+注意！！ Phase 6.0から、エントリ名に使用可能な文字種類を変更します。<BR>
+「-」が使用不可になりますので、「.」に置き換えてください。
+</P>
+
+<P>
+"華和梨"は、本体から通知された情報を以下のエントリに書き込みます。<BR>
+詳細は「何か。」公式ページのSHIORI仕様書を参照して下さい。
+</P>
+
+<DIV align="center">
+<TABLE width="80%">
+<TR><TD>system.Ghost</TD><TD>本体から通知された自分のゴースト名</TD></TR>
+<TR><TD>system.OtherGhost</TD><TD>稼動中の他のゴーストの名前</TD></TR>
+<TR><TD>system.OtherGhostEx</TD><TD>稼動中の他のゴーストの名前(サーフィス番号付)</TD></TR>
+<TR><TD>system.Reference0～7</TD><TD>イベント引数Referense0～7</TD></TR>
+<TR><TD>system.Sender</TD><TD>話し掛けてきたゴースト名、又はシステム名</TD></TR>
+<TR><TD>system.Sender.Path</TD><TD>話し掛けてきた経路(local/unknown/external)</TD></TR>
+<TR><TD>system.Age</TD><TD>COMMUNICATEの回数</TD></TR>
+<TR><TD>system.Sentence</TD><TD>話し掛けられた内容</TD></TR>
+<TR><TD>system.ID</TD><TD>要求されたリソースID</TD></TR>
+<TR><TD>system.Surface</TD><TD>話し掛けてきたゴーストのサーフィス番号</TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+以下のエントリは、インラインスクリプトで情報を書き込みます。
+これらは本体への応答に一回使用すると、"華和梨"が自動的に消去します。
+</P>
+
+<DIV align="center">
+<TABLE width="80%">
+<TR><TD>system.communicate</TD><TD>
+ゴースト名を書き込むと、そのゴーストにCOMMUNICATEで話し掛ける<BR>
+"stop"を書き込むと、COMMUNICATEを打ち切る</TD></TR>
+<TR><TD>system.Response0～7</TD><TD>
+書き込んだ内容をReference0～7としてCOMMUNICATEで送信
+</TD></TR>
+<TR><TD>system.BalloonOffset</TD><TD>
+バルーンのオフセット位置
+</TABLE>
+</DIV>
+
+<P>
+以下のエントリは「何か。」が指定した単語分類に一致する単語を要求してきたときに
+呼び出されます。
+</P>
+
+<DIV align="center">
+<TABLE width="80%">
+<TR><TD>compatible.ms</TD><TD>名詞-人</TD></TR>
+<TR><TD>compatible.mz</TD><TD>名詞-無機物</TD></TR>
+<TR><TD>compatible.mc</TD><TD>名詞-社名</TD></TR>
+<TR><TD>compatible.mh</TD><TD>名詞-店名</TD></TR>
+<TR><TD>compatible.mt</TD><TD>名詞-技</TD></TR>
+<TR><TD>compatible.me</TD><TD>名詞-食物</TD></TR>
+<TR><TD>compatible.mp</TD><TD>名詞-地名みたいなもの</TD></TR>
+<TR><TD>compatible.m</TD><TD>名詞-非限定</TD></TR>
+<TR><TD>compatible.dms</TD><TD>「～に～する～」的な、品詞が複数連結された長めの名詞</TD></TR>
+</TABLE>
+</DIV>
+
+
+<A name="evententry"></A>
+<H3>4.6. イベントエントリ</H3>
+
+<P>
+注意！！ Phase 6.0から、エントリ名に使用可能な文字種類を変更します。<BR>
+「-」が使用不可になりますので、「.」に置き換えてください。
+</P>
+
+<P>
+「event.イベント名」形式のエントリは、OnClose等のイベントが発生した際に呼ばれ
+ます。仮にOnGhostChangingイベントが発生したとすると、対応するエントリである
+event.OnGhostChangingエントリが呼ばれます。sentenceエントリと同じように記述
+して下さい。<BR>
+今後追加されるイベントも"華和梨"側の変更なしで対応できます。<BR>
+イベントの補助情報が記述されているReference0～Reference7は、それぞれシステム
+エントリのsystem.Reference0～system.Reference7に書き込まれます。また、発生
+したイベント名はsystem.EventNameエントリに書き込まれます。
+</P>
+
+<P>
+いくつかのイベントはshioriで処理することが必須になっていますので、必ず対応する
+スクリプトを記述してください。<BR>
+<!-- 必須でないイベントの記述を省略した場合には、piroが処理を行います。 -->
+</P>
+
+<P>
+イベントの詳細は、「何か。」公式ページのSHIORI仕様書を参照して下さい。
+</P>
+
+<P>
+以下のイベントは"華和梨"が内部的に呼び出します。
+</P>
+
+<DIV align="center">
+<TABLE width="80%">
+<TR><TD>system.OnLoad</TD><TD>読み込み完了イベント</TD></TR>
+<TR><TD>system.OnUnload</TD><TD>切り離しイベント</TD></TR>
+<TR><TD>system.OnTeach</TD><TD>SHIORI/2.4 TEACH開始イベント<BR>
+ユーザーの教えた単語はsystem.Sentenceに入っている</TD></TR>
+<TR><TD>system.OnTranslate</TD><TD> TRANSLATE SHIORI/2.6イベント<BR>
+置換対象はsystem.Sentenceに入っている</TD></TR>
+<TR><TD>system.OnResponse</TD><TD>応答イベント</TD></TR>
+<TR><TD>system.OnResponseUnknown</TD><TD>応答不明イベント</TD></TR>
+<TR><TD>system.OnNotifyGhost</TD><TD>ゴースト名通知イベント</TD></TR>
+<TR><TD>system.OnNotifyOther</TD><TD>他ゴースト名通知イベント</TD></TR>
+<TR><TD>system.OnGetStatus</TD><TD>ステータス取得イベント</TD></TR>
+<TR><TD>system.OnEventUnknown</TD><TD>スクリプトで未定義のSHIORI/2.2 イベント<BR>
+イベント名はsystem.EventNameに入っている</TD></TR>
+</TABLE>
+</DIV>
+
+
+
+<A name="matchentry"></A>
+<H3>4.7. マッチエントリとCOMMUNICATE</H3>
+
+
+<P>
+「["単語" , "単語" , ...]」の形をした特殊なエントリを「マッチエントリ」と呼びます。
+マッチエントリは、コミュニケートボックスからの入力や、他のゴーストからの呼びかけに
+返事をする「COMMUNICATE」処理で用います。
+</P>
+
+<P>
+コミュニケートの際に「単語」を含む文が送られてきた場合呼ばれます。
+複数の単語を書いた場合、書いた単語全てが含まれる文が送られてきた場合呼ばれます。
+</P>
+
+<BLOCKQUOTE><PRE>
+    ["徹夜" , "眠い"] : 徹夜明けは眠いね。
+</PRE></BLOCKQUOTE>
+
+<P>
+上記の例では、「徹夜」と「眠い」の2単語を含む文がCOMMUNICATEで送られてきた時、
+「徹夜明けは眠いね。」を返します。
+</P>
+
+<P>
+マッチエントリの検索を開始する前に、「system.OnResponse」イベントが発生します。
+「system.OnResponse」イベントでなんらかの文字列を返した場合には、マッチエントリの
+検索を中止します。
+マッチエントリに該当するものが無い時には、「system.OnResponseUnknown」イベントが発生します。
+</P>
+
+<P>
+COMMUNICATEで返事を返す際にsystem.Response0～system.Response7エントリに
+何か書き込むと、内容をそれぞれReference0～Reference7にセットして相手ゴーストに
+渡します。詳細はSHIORI/2.3b規格の仕様書を参照して下さい。
+</P>
+
+<A name="resourceentry"></A>
+<H3>4.8. リソースエントリ</H3>
+
+<P>
+「resource.リソース名」形式のエントリは、本体からネットワーク更新先URL、
+おすすめメニュー等を要求された際に呼ばれます。
+リソースの詳細は、「何か。」公式ページのSHIORI仕様書を参照して下さい。
+</P>
+
+
+<A name="inlinescript"></A>
+<H2>5. インラインスクリプト</H2>
+
+<P>
+「華和梨インラインスクリプト(Kawari Inline Script)」を用いることにより、
+イベント処理、辞書の内容の動的な変更、エントリ内容による条件分岐等を実現できます。
+基本的なスクリプトの書式は、「$(コマンド名 引数1 引数2…)」の形式です。
+(簡単に言えば「Bash(Bourne Again SHell)のサブセット」です。)
+言語仕様の詳細は、添付の「華和梨インラインスクリプト リファレンスマニュアル」
+を参照して下さい。
+</P>
+
+<P>
+"華和梨ゴースト"会話データファイル(ghost-kawari.txt)の中に、インラインスクリ
+プトの用例があります。コミュニケートボックスから簡単に呼べるようになっています
+ので、いろいろ遊んでみて、動作を確かめると良いでしょう。
+</P>
+
+
+
+<A name="crypt"></A>
+<H2>6. 暗号化辞書</H2>
+
+<P>
+ネタをよりばれにくくするために、辞書ファイルに簡単な暗号化を施すことができます。<BR>
+暗号化には付属のkawari_encode.exeを用います。<BR>
+使用方法は、DOSプロンプトで以下のように入力します。復号ツールは作らないので、
+辞書ファイルを後で編集する場合、必ず暗号化前のファイルを残しておいて下さい。
+</P>
+
+<BLOCKQUOTE><PRE>
+  kawari_encode.exe 辞書ファイル名1 辞書ファイル名2 ...
+</PRE></BLOCKQUOTE>
+
+<P>
+辞書ファイルのファイル名の拡張子を「.kaw」に変えたファイルが、暗号化された
+辞書ファイルです。<BR>
+辞書ファイル中、「:crypt」と書かれた行から、「:endcrypt」と書かれた行までが
+暗号化の対象となります。それ以外の行は元のまま残されます。
+</P>
+
+<BLOCKQUOTE><PRE>
+  例 dict-sample.txt
+    #############################
+    # 著作件表示など
+    #############################
+    
+    # ここから暗号化
+    :crypt
+    # 会話データ
+    sentence : \h昨日${npw}を${npp}で偶然見かけたよ。\e
+    sentence : \h${npp}良いとこ一度はおいで、はぁーじょいなじょいな。\e
+    # 名詞-固有名詞-人名 ( npw )
+    npw : 鈴木一郎 , 山本太郎
+    # 名詞-固有名詞-地名 ( npp )
+    npp : 首相官邸 , ホワイトハウス
+    npp : ${npw}の家
+    :endcrypt
+    # ここまで暗号化
+</PRE></BLOCKQUOTE>
+
+<P>
+このファイルを暗号化すると、次のようなファイルが生成されます。
+</P>
+
+<BLOCKQUOTE><PRE>
+  例 dict-sample.kaw
+    #############################
+    # 著作件表示など
+    #############################
+    
+    # ここから暗号化
+    !KAWA00007+x+PQMPaQttcGlz
+    !KAWA0000v6miuKmir6ns9uyQpHY+CjDot6K8u7FoPui3ory8sWgLejoNf3R(後略)
+    !KAWA0000v6miuKmir6ns9uyQpOi3ory8sQIFaGhoBGh/fCAJFWgDaGZoaGg(後略)
+    !KAWA00007+wAcncg4XQLAWEAcncg4XMBAHLs5OyivLvs5Q==
+    !KAWA0000ory77PbsAicAFnwgA3bs4Ox3fwcQDgwDdg==
+    !KAWA00007+wAcncg4XQLAWEAcncg4Q8DAHLs5OyivLzs5Q==
+    !KAWA0000ory87PbscD8NJnh9CW3s4OxpF2kjaWhpBGkDaWppdQ==
+    !KAWA0000ory87Pbs6LeivLuxaAJ+BA==
+    # ここまで暗号化
+</PRE></BLOCKQUOTE>
+
+<P>
+生成された暗号化辞書ファイル「dict-*.kaw」を、kawari.iniで指定して下さい。
+暗号化ファイルの拡張子は、.kaw以外に変更しても大丈夫です。
+</P>
+
+
+</BODY>
+</HEAD>
+</HTML>
+

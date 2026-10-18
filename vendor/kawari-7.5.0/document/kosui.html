@@ -1,0 +1,271 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<HTML lang="ja">
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=SHIFT_JIS">
+<META http-equiv="Content-Script-Type" content="text/javascript">
+<META http-equiv="Content-Style-Type" content="text/css">
+<TITLE>幸水マニュアル</TITLE>
+
+<STYLE>
+<!--
+BODY {
+	padding: 1em 8% 1em 8%;
+	line-height: 140%;
+}
+PRE {
+	padding: 8px;
+	margin: 0;
+	border-width: 2px;
+	border-color: #a0a0ff;
+	border-style: solid;
+}
+P {
+	text-indent: 1em;
+	line-height: 140%;
+}
+TABLE{
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+CAPTION{
+	padding-top: 8px;
+	padding-left: 2em;
+	font-weight: bold;
+	text-allign: left;
+}
+TR TD{
+	vertical-align: top;
+	text-align: left;
+}
+TR.genre{
+	font-style: italic;
+	text-indent: 1em;
+}
+
+H2 {
+	border-color: #6060c0;
+	border-width: 2px 2px 2px 1em;
+	padding: 0.1em 0 0.1em 0.5em;
+	border-style: solid;
+}
+
+H3 {
+	border-color: #6060c0;
+	border-width: 0 0 1px 0;
+	border-style: solid;
+	padding-left: 1em;
+}
+
+
+A { text-decoration: none; }
+A:link { color: #7070ff; }
+A:visited { color: #7070ff; }
+A:hover { color: orange; text-decoration: underline; }
+A:active { background: crimson; color: white; }
+
+DIV.title{
+	width: 90%;
+	text-align: left;
+}
+
+P.h1 { font: 700 140%;  }
+P.pre {
+	text-indent: 0;
+	font-family: sans-serif;
+	font-size: 90%;
+	padding: 8px;
+	margin: 0;
+	border-width: 2px;
+	border-color: #a0a0ff;
+	border-style: solid;
+}
+TABLE.command_table {
+	padding: 8px;
+	border-width: 2px;
+	border-color: #ffa0a0;
+	border-style: solid;
+}
+TABLE.command_table CAPTION{
+	background: #ffa0a0;
+}
+TABLE.command_table TR.genre{
+	color: #4040ff;
+}
+
+TABLE.command {
+	padding: 8px;
+	border-width: 2px;
+	border-color: #a0a0ff;
+	border-style: solid;
+}
+TABLE.command CAPTION{
+	background: #a0a0ff;
+}
+
+SPAN.tt {
+	font-family: monospace;
+}
+// -->
+</STYLE>
+<BODY text="black" bgcolor="white">
+
+<DIV align="center">
+<DIV class="title">
+	<P class="h1">
+	プログラマブル準AIモジュール
+	</P><P class="h1">
+	「"華和梨" for あれ以外の何か以外の何か」<BR>
+	幸水マニュアル
+        </P>
+	<DIV align="right">
+		<P>
+		2002/05/25<BR>
+		Phase 7.4.0
+		</P><P>
+		華和梨開発チーム<BR><BR>
+		NAKAUE.T (Meister)<BR>
+		夢乃 (偽Meister)<BR>
+		酔狂<BR>
+		さとー
+		</P>
+	</DIV>
+</DIV>
+</DIV>
+
+<H2>Index</H2>
+
+<BLOCKQUOTE>
+<A href="#youto">1. 用途</A><BR>
+<A href="#howtouse">2. 起動方法</A><BR>
+　<A href="#interpretermode">2.1. インタープリタモード</A><BR>
+　<A href="#debuggermode">2.2. デバッガモード</A><BR>
+<A href="#operation">3. 操作方法</A><BR>
+　<A href="#echomode">3.1. echoモード</A><BR>
+　<A href="#commandmode">3.2. commandモード</A><BR>
+<A href="#quit">4. 終了方法</A><BR>
+</BLOCKQUOTE>
+
+<A name="youto"></A>
+<H2>1. 用途</H2>
+
+<P>
+"幸水(こうすい)"はコンソールで動作する華和梨インタープリタです。
+稼動中のゴーストの華和梨と接続し、デバッグ作業を行うことも出来ます。
+</P>
+
+
+<A name="howtouse"></A>
+<H2>2. 起動方法</H2>
+
+<P>
+"kosui.exe"をダブルクリックするか、"kosui.exe"の存在するフォルダで
+コンソールを開き、"kosui.exe"と入力すると起動します。
+</P>
+
+<P>
+この時、稼動中のゴーストがあるかどうかによって、幸水の動作は大きく
+「インタープリタモード」と「デバッガモード」の二つに分かれます。
+</P>
+
+
+<A name="interpretermode"></A>
+<H3>2.1. インタープリタモード</H3>
+
+<P>
+稼動中のゴーストが見つからない場合、幸水はインタープリタモードで起動します。
+インタープリタモードでは、幸水に内蔵された華和梨モジュールを使用します。
+また、稼動中のゴーストがある場合でも、起動後に接続するゴーストとして0番を選ぶと
+インタープリタモードで起動します。
+</P>
+
+<P>
+インタープリタモードで起動すると、幸水は"kosui.exe"が存在するフォルダの
+kawari.iniを読み、kawari.iniで指定した辞書ファイルを読み込みます。
+その後、system.OnLoadエントリがあった場合、これを評価してからユーザの
+キー入力を受け付ける状態になります。
+</P>
+
+
+<A name="debuggermode"></A>
+<H3>2.2. デバッガモード</H3>
+
+<P>
+稼動中のゴーストがある場合、幸水はデバッガモードで起動します。
+デバッガモードでは、幸水はゴーストに対してSAKURA APIを使ったイベント
+通知を行います。通知出来るイベントは2種類あり、後述する「echoモード」
+では「ShioriEcho」イベント、「commandモード」では「KawariCommand」
+イベントが通知できます。
+</P>
+
+<P>
+稼動中のゴーストが華和梨ゴーストで、ゴーストのkawari.iniに
+「debug : debugger」と書いてある場合、幸水は上記のイベント利用して、
+稼動中のゴーストの華和梨モジュールと接続します。
+接続すると、幸水は稼動中のゴーストを操作することが出来ます。
+この際、イベントに対応するエントリを記述する必要はありません。
+</P>
+
+
+<A name="operation"></A>
+<H2>3. 操作方法</H2>
+
+<P>
+インタープリタモード、デバッガモードのどちらでも、幸水の操作方法は共通です。
+キーボードから文章を入力し、最後にENTERキーを押すと入力した文章を評価します。
+入力を評価した結果は、インタープリタモードの場合はコンソールに、
+デバッガモードの場合はゴーストのバルーンに表示します。
+</P>
+
+<P>
+「.[ENTER]」と入力すると、幸水は入力モードを切り替えます。入力モードは2種類あり、
+「echoモード」と「commandモード」があります。コンソールの一番下の表示行が
+<PRE>
+  echo-mode >
+</PRE>
+の場合がechoモード、
+<PRE>
+  command-mode >
+</PRE>
+の場合がcommandモードです。起動直後のモードはechoモードです。
+</P>
+
+
+<A name="echomode"></A>
+<H3>echoモード</H3>
+
+<P>
+echoモードでは、幸水は入力された文章をそのまま評価します。文章中に
+${npw}等のエントリ呼び出し、$(set A "TEST")等のインラインスクリプトが
+ある場合、これも解釈します。
+</P>
+<PRE>
+例:
+  echo-mode > \0${挨拶}、私は${myname}です。\1よろしくな。\e$(set Boot 1)
+</PRE>
+
+
+<A name="commandmode"></A>
+<H3>commandモード</H3>
+
+<P>
+commandモードはインラインスクリプトの評価に特化したモードです。幸水は
+入力された文章の前後に、"$("と")"を付加してから評価します。例えば、
+<PRE>
+  command-mode > adddict npw "まゆら"
+</PRE>
+と入力すると、「$(adddict npw "まゆら")」という文を評価します。
+</P>
+
+
+<A name="quit"></A>
+<H2>終了方法</H2>
+
+<P>
+echoモード、commandモードのどちらでも、「exit[ENTER]」と入力すると
+幸水を終了することが出来ます。
+</P>
+
+
+</BODY>
+</HEAD>
+</HTML>

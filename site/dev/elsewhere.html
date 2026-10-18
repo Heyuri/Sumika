@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sumika elsewhere</title>
+<!--
+  A page on another origin that loads the runtime from the runtime host (CLAUDE.md "Commands", tools/serve.py; never
+  published: the upload leaves site/dev/ out). Serve site/ on two or three ports and the runtime host on its own:
+    python -I tools/serve.py --site site --port 8643 --cors --hub-allow http://localhost:8644 --hub-allow http://localhost:8645
+    python -I tools/serve.py --site site --port 8644
+    python -I tools/serve.py --site site --port 8645
+  then open http://localhost:8644/dev/elsewhere.html?next=http://localhost:8645
+  Query:
+    runtime=URL   sumika.js to load (default http://localhost:8643/sumika/sumika.js)
+    hub=0         no data-hub (the page keeps its data on its own origin)
+    hub=URL       data-hub="URL" (an absolute hub page); absent or empty: a bare data-hub (hub.html next to sumika.js)
+    next=ORIGIN   the link goes to this page on ORIGIN, with the same query (and next= this origin, so it links back)
+    ghost=ID      data-default-ghost (absent: the site's first ghost that can run)
+    phone=MODE    data-phone (on, tucked, off)
+    sumika-debug  the runtime's log in the console
+-->
+<style>
+  body { font: 16px/1.6 system-ui, sans-serif; margin: 0; padding: 24px 16px; background: #eef2ea; color: #222; }
+  main { max-width: 720px; }
+  a { color: #1a5fb4; }
+  code { background: #e2e6dc; padding: 1px 4px; border-radius: 3px; overflow-wrap: anywhere; }
+  button { font: inherit; padding: 4px 12px; }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 2px 12px; }
+  dt { font-weight: 600; }
+  dd { margin: 0; overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Sumika on another origin</h1>
+  <dl>
+    <dt>This page</dt><dd><code id="origin"></code></dd>
+    <dt>Runtime</dt><dd><code id="runtime"></code></dd>
+    <dt>data-hub</dt><dd><code id="hub"></code></dd>
+    <dt>Hub frame</dt><dd id="frame">not planted yet</dd>
+    <dt>Shown</dt><dd id="shown">loaded</dd>
+  </dl>
+  <p id="nextline">No <code>?next=</code> origin: add one to get a link to the same page on another origin.</p>
+  <p><button id="talk" type="button">Long talk</button> She counts to ten slowly: follow the link while she talks.</p>
+  <p>Add <code>?sumika-debug</code> to see the runtime's log, and which storage it uses, in the console.</p>
+</main>
+<script>
+(() => {
+  const q = new URLSearchParams(location.search);
+  const runtime = q.get('runtime') || 'http://localhost:8643/sumika/sumika.js';
+  const s = document.createElement('script');
+  s.src = runtime;
+  if (q.get('ghost')) s.dataset.defaultGhost = q.get('ghost');
+  const hub = q.get('hub');
+  if (hub !== '0') s.dataset.hub = hub || '';
+  if (q.get('phone')) s.dataset.phone = q.get('phone');
+  document.head.appendChild(s);
+
+  document.getElementById('origin').textContent = location.origin;
+  document.getElementById('runtime').textContent = runtime;
+  document.getElementById('hub').textContent = hub === '0' ? '(absent)' : hub ? hub : '(bare: hub.html next to sumika.js)';
+
+  const next = q.get('next');
+  if (next) {
+    let target = null;
+    try { target = new URL(location.pathname, next); } catch (e) { target = null; }
+    if (target) {
+      const back = new URLSearchParams(q);
+      back.set('next', location.origin);
+      target.search = back.toString();
+      const line = document.getElementById('nextline');
+      line.textContent = 'Go to ';
+      const a = document.createElement('a');
+      a.href = target.href;
+      a.textContent = `this page on ${target.origin}`;
+      line.appendChild(a);
+      line.appendChild(document.createTextNode(': she should go on where she was, without greeting you again.'));
+    }
+  }
+
+  const frameLine = document.getElementById('frame');
+  const showFrame = () => {
+    const f = document.querySelector('iframe[title="Sumika storage"]');
+    frameLine.textContent = f ? `present: ${f.src}` : (hub === '0' ? 'none (no data-hub)' : 'none (not planted, or removed after a fallback)');
+  };
+  setInterval(showFrame, 1000);
+  showFrame();
+
+  // whether Back / Forward brought this page out of the browser's back/forward cache, or loaded it again
+  let restored = 0;
+  window.addEventListener('pageshow', ev => {
+    if (!ev.persisted) return;
+    restored++;
+    document.getElementById('shown').textContent =
+      `again from the back/forward cache (${restored === 1 ? 'once' : `${restored} times`}, last at ${new Date().toLocaleTimeString()})`;
+  });
+
+  const LONG = '\\0\\s[0]This is a long line for checking that I go on where I was.\\w9\\w9 ' +
+    ['One', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'].map(n => `${n},\\w9\\w9\\w9\\w9`).join(' ') +
+    ' and that is all.\\e';
+  document.getElementById('talk').addEventListener('click', () => {
+    const rt = window.sumika && window.sumika.runtime;
+    const loop = rt && rt.parts && rt.parts.loop;
+    if (loop) loop.playScript(LONG);
+    else alert('No ghost runs on this page right now.');
+  });
+})();
+</script>
+</body>
+</html>

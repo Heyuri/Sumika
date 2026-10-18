@@ -1,0 +1,63 @@
+{
+  "format": 1,
+  "about": "Pins of the MIDI player's third-party inputs (docs/research/midi.md §1). tree = the tree pin of kawari-wasm.md §1 (SHA-256 over every file of the folder, its SOURCE.txt included, in sorted relative POSIX path order, of `path NUL size NUL bytes`; the same function as engines/kawari7/build.py tree_pin). A build must stop when a folder's pin differs. The build reads the other three folders; generaluser-gs's pin covers the reference SF2 in place, which the repository leaves out (its SOURCE.txt).",
+  "vendor": {
+    "spessasynth_core": {
+      "dir": "vendor/spessasynth_core-4.3.22",
+      "version": "4.3.22",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/spessasynth_core/-/spessasynth_core-4.3.22.tgz",
+      "integrity": "sha512-qP6NkcZLmTLIs9fCUh2IhZRkd3Junwu8ppD4K0l/0R+Lo4P48d4Rbe8YQ8RlEYyRKFz8HcPM75sXYVQLAb7k4A==",
+      "sha256": "ff232efdef6bdd46037098dfede1f652aec53dd6042463170144bb929af722f9",
+      "repository": "https://github.com/spessasus/spessasynth_core",
+      "gitHead": "99f294d997dea0f2691738c97586c6a3d289fe7d",
+      "tree": "c7ebff5ed77365c4e6898fdf5a8be078c6b44c53c5d241c138fdc8f948060139",
+      "files": 7
+    },
+    "stb-vorbis": {
+      "dir": "vendor/stb-vorbis-0.0.6",
+      "version": "0.0.6",
+      "license": "Apache-2.0 (stb_vorbis.c v1.22: MIT or public domain)",
+      "source": "https://registry.npmjs.org/stb-vorbis/-/stb-vorbis-0.0.6.tgz",
+      "integrity": "sha512-CyvjJEGROIdnuZknwFvdOfMIO1ssUxO2OawsXCR3IlbJ8z2IMBjDe8FDxFJqBfLgf1ZOdqvoHAYx3Xk8q9rbbg==",
+      "sha256": "c9b539e71303f17bfb2fbcfd546fa905d1e25b045a3bd15454e6caf072f52659",
+      "repository": "https://github.com/spessasus/stb-vorbis",
+      "gitHead": "2c5f11f028192b5580650ffd79d49ca3019a32fb",
+      "tree": "3c2fab9ced08012f61248e12797981c110dc5740a5f6c271054e5f76fadcc841",
+      "files": 6
+    },
+    "generaluser-gs": {
+      "dir": "vendor/generaluser-gs-2.0.3",
+      "version": "2.0.3",
+      "license": "GeneralUser GS License v2.0",
+      "source": "https://github.com/mrbumpy409/GeneralUser-GS",
+      "commit": "684543d5e5efaef08d02be50dcda8d552478fa60",
+      "tree": "8219279067e15157da45142f51c7f6108f264b0fa2f000e880881a686cbd0a45",
+      "files": 6
+    },
+    "generaluser-gs-sf3": {
+      "dir": "vendor/generaluser-gs-2.0.3-sf3",
+      "version": "2.0.3",
+      "license": "GeneralUser GS License v2.0",
+      "source": "https://github.com/spessasus/SpessaSynth",
+      "commit": "6f7505087eba09bdbf345c97f5cf573fc547412e",
+      "tree": "501c7284de2b9ae397b6c8ea80b3a65bb5b326d53b2df98c0f9d89a50d3ab8df",
+      "files": 2
+    }
+  },
+  "bank": {
+    "file": "vendor/generaluser-gs-2.0.3-sf3/GeneralUserGS.sf3",
+    "size": 8423728,
+    "sha256": "e2ed326ff44d15f78f2fdc72403b6fa6b77ee7266d3aad0d2198bc95797bc66c",
+    "publishAs": "sumika/engines/generaluser_gs.<nameHash of the SF3>.sf3.gz"
+  },
+  "reference": {
+    "file": "vendor/generaluser-gs-2.0.3/GeneralUser-GS.sf2",
+    "size": 32319396,
+    "sha256": "9575028c7a1f589f5770fccc8cff2734566af40cd26ed836944e9a5152688cfe"
+  },
+  "notices": {
+    "file": "engines/midi/midi.LICENSES.txt",
+    "publishAs": "sumika/engines/midi.LICENSES.txt"
+  }
+}

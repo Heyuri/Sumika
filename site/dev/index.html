@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sumika test page</title>
+<!-- A development page (site/dev/ is never uploaded): http://localhost:8642/dev/ on the site server
+     (python tools/serve.py), or /site/dev/ with the repository root served (python tools/serve.py --site .).
+     sumika.js by a relative path, so both work. -->
+<script src="../sumika/sumika.js" defer></script>
+<style>
+  body { font: 16px/1.6 system-ui, sans-serif; margin: 0; padding: 24px 16px; background: #f4f1ea; color: #222; }
+  main { max-width: 720px; }
+  a { color: #1a5fb4; }
+  code { background: #e8e4da; padding: 1px 4px; border-radius: 3px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Sumika test page</h1>
+  <p>This page includes one script in its <code>&lt;head&gt;</code>. Once the site has a ghost (docs/guide.md "Adding
+    a ghost"), the site's first ghost appears in the bottom-right corner; until then nothing of Sumika shows, and the
+    browser's console says that the site has no ghosts.</p>
+  <p>Go to <a href="page2.html">the second page</a>: the ghost should come back without greeting you again.</p>
+  <p>Add <code>?sumika-debug</code> to the address to see the runtime's log in the console.</p>
+  <p>The other development pages of this folder: <a href="elsewhere.html">elsewhere.html</a> (a page on another
+    address for the storage hub; docs/guide.md "Pages on other sites"), and <a href="runtime.html">runtime.html</a>,
+    <a href="shell.html">shell.html</a>, <a href="balloon.html">balloon.html</a> and
+    <a href="sakura.html">sakura.html</a>, which work only with the project root served
+    (<code>python tools/serve.py --site .</code>, then <code>/site/dev/</code>).</p>
+</main>
+</body>
+</html>

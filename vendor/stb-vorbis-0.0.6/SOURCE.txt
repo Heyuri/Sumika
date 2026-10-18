@@ -1,0 +1,14 @@
+stb-vorbis 0.0.6 (npm, published 2026-08-11), a synchronous Ogg Vorbis decoder: Sean Barrett's stb_vorbis.c v1.22
+compiled to WebAssembly (base64 inside dist/index.js), by spessasus (https://github.com/spessasus/stb-vorbis, gitHead
+2c5f11f028192b5580650ffd79d49ca3019a32fb). spessasynth_core's only runtime dependency; the registry's latest on
+2026-10-16. Downloaded 2026-10-16 (with SpessaSynth) from
+  https://registry.npmjs.org/stb-vorbis/-/stb-vorbis-0.0.6.tgz
+sha256 of stb-vorbis-0.0.6.tgz: c9b539e71303f17bfb2fbcfd546fa905d1e25b045a3bd15454e6caf072f52659
+npm dist.integrity sha512-CyvjJEGROIdnuZknwFvdOfMIO1ssUxO2OawsXCR3IlbJ8z2IMBjDe8FDxFJqBfLgf1ZOdqvoHAYx3Xk8q9rbbg==
+and shasum 9425bf7415d8792d1b26742c87247b0ec8207f08, both equal to the downloaded file's.
+Unpacked unchanged (the tarball's package/ folder, 5 files), never installed with npm (no package script ran).
+Licence: LICENSE (Apache-2.0) for the package; stb_vorbis.c itself is MIT or public domain (Unlicense), the
+licence block at the end of wasm/stb_vorbis.c at the gitHead (read 2026-10-16, not kept; that file's sha256
+3eff78a8c4c769ad39720a063e20b90ab1b3184dbb57ccd50afc8580f201718d).
+engines/midi/midi.LICENSES.txt carries both.
+Pinned by engines/midi/pins.json (a tree pin over this folder, this file included: the method of kawari-wasm.md §1).

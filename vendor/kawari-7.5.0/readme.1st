@@ -1,0 +1,67 @@
+アーカイブの説明
+
+このアーカイブは、華和梨Phase 7.0(kawari-2001-0825-1900)に
+・酔狂さんのredo34以降のSender仕様に対応したセキュリティ対策パッチ
+・酔狂さんの3エントリ以上のAND検索不具合修正パッチ
+・えびさわさんの起動速度向上パッチ
+・MDRさんのtolower、toupperコマンド追加パッチ
+を当てたものに、
+・textloadコマンドを追加
+・SHIORI/2.3bに対応
+・セキュリティのSSP対応
+・ハイフンを使用した特殊エントリ対応中止
+・Referenceを扱う部分のうち、DLLサイズを膨らませていた部分の変更
+  (以上7.0.1)
+・GhostExヘッダ対応 system.OtherGhostExで参照可能
+・GET Versionを再度kawari.cppに移管
+・SHIORI/2.6仮対応(現状Shift_JISに固定)
+・内部イベント追加(OnEventUnknown)
+  (以上 7.0.2)
+・SecurityLevelヘッダ対応
+・えびさわさんの華和梨Z Phase 7.0.2からkawari_engine.cppフィードバック
+  (以上 7.0.3)
+・稀に(約3万2千分の1の確率)エントリ呼び出しに失敗するバグを修正
+  同時に乱数をMersenne Twisterアルゴリズムを用いたものに変更
+  (以上 7.1)
+・ランダムクラスの初期値設定を忘れていた問題を修正
+・現状に合わせ、SecurituLevel 4を廃止
+  (以上 7.1.1)
+・使用しないsystem.Reference*にゴミが入る問題に気休め対策
+・テキストファイルをkawari.iniで指定できるようにした
+・readdirコマンド追加
+・kis_textfile.*をkis_file.*、kawari_engine.*に統合・機能移管
+ (以上 7.1.2)
+・VC向けopendir、readdir、closedir最小実装(Thanks: えびさわさん)
+・system.communicate、system.Reference*にゴミが入る問題の解決(Thanks: しのさん)
+・arrayコマンド追加
+ (以上 7.2)
+・著作者表示ヘッダの追加(Thanks: えびさわさん)
+  これに伴ないgetversion関数廃止
+・NOTIFY伝達経路情報をSecurityLevelのみで判別するように変更
+・exprコマンドにfindposサブコマンド追加
+・splitコマンド追加
+・testコマンド仕様拡張
+ (以上 7.3)
+・BalloonOffsetヘッダ対応
+ (以上 7.3.1)
+・MTライブラリを修正BSD版に差し替え
+・verコマンドにライセンス表示機能追加
+・ログファイル系変更
+・BalloonOffsetのバグ修正
+・TRANSLATE SHIORI/2.6対応
+・SAORIモジュール読み込み対応
+ (以上 7.4.0)
+・Sanoriさん、whoamiさんのパッチを元に国際化対応
+
+のパッチを当てたものです。
+各パッチ作者の皆さんに感謝します。
+
+なお、このアーカイブに含まれるプログラムは、修正BSDライセンス(FreeBSDスタイル)
+で再配布可能です。
+また、Mersenne Twisterアルゴリズムによる擬似乱数発生関数は、松本眞・西村拓士
+両氏により以下のサイトで公開中のソースを流用しました。
+  http://www.math.keio.ac.jp/~matumoto/mt.html
+優れたアルゴリズムを、緩やかな条件で使用させていただいたことに感謝します。
+"mt19937ar.cpp"、"mt19937ar.h"については、修正BSDライセンスに従うものとします。
+
+2003.02.16 華和梨開発チーム

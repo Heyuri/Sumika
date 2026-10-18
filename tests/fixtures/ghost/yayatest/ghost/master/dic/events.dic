@@ -1,0 +1,146 @@
+// yayatest: events (Sumika tests). Every talk is deterministic: OnSecondChange talks on every 5th call.
+
+On_version
+{
+	'yayatest 1.0'
+}
+
+On_installedghostname
+{
+	installed = reference
+}
+
+OnFirstBoot
+{
+	'\0\s[0]Nice to meet you. I am Yayako.\1\s[10]And I am Kero.\e'
+}
+
+OnBoot
+{
+	'\0\s[0]Welcome back.\e'
+}
+
+OnClose
+{
+	'\0\s[0]Goodbye.\-'
+}
+
+OnMouseDoubleClick
+{
+	'\0\s[0]What shall we do?\n\q[Talk,talk]\n\q[Nothing,nothing]\e'
+}
+
+OnChoiceSelect
+{
+	if reference[0] == 'talk' {
+		'\0\s[0]Let us talk.\e'
+	}
+	elseif reference[0] == 'nothing' {
+		'\0\s[0]All right.\e'
+	}
+}
+
+OnCommunicate
+{
+	'\0\s[0]You said: ' + reference[1] + '\e'
+}
+
+OnSecondChange
+{
+	ticks += 1
+	if ticks % 5 == 0 {
+		'\0\s[0]Tick ' + ticks + '.\e'
+	}
+}
+
+// Helpers for tests/yaya_engine.test.mjs: Reference0 is the case, Reference1 its argument.
+OnTest
+{
+	_case = reference[0]
+	_arg = reference[1]
+	if _case == 'boots' {
+		boots
+	}
+	elseif _case == 'eval' {
+		TOSTR(EVAL(_arg))
+	}
+	elseif _case == 'saori' {
+		_r = LOADLIB('saori/gomi.dll')
+		if _r == 1 {
+			dll ,= 'saori/gomi.dll'
+		}
+		_res = REQUESTLIB('saori/gomi.dll', 'EXECUTE SAORI/1.0' + CHR(13, 10) + 'Charset: UTF-8' + CHR(13, 10) + 'Argument0: あ①' + CHR(13, 10) + CHR(13, 10))
+		'loadlib ' + _r + ', ' + SPLIT(_res, CHR(13, 10))[0]
+	}
+	elseif _case == 'missing' {
+		'loadlib ' + LOADLIB('saori/missing.dll')
+	}
+	elseif _case == 'write' {
+		_r = MKDIR('var')
+		_r = MKDIR('../../notelog')
+		_r = FOPEN('var/note.txt', 'w')
+		_r = FWRITE2('var/note.txt', 'a note')
+		_r = FCLOSE('var/note.txt')
+		_r = FOPEN('../../notelog/n.txt', 'w')
+		_r = FWRITE2('../../notelog/n.txt', 'outside')
+		_r = FCLOSE('../../notelog/n.txt')
+		_r = FOPEN('x.log', 'w')
+		_r = FWRITE2('x.log', 'a log')
+		_r = FCLOSE('x.log')
+		'written'
+	}
+	elseif _case == 'rewrite' {
+		_r = FOPEN('dic/memo.dic', 'w')
+		_r = FWRITE('dic/memo.dic', 'Memo')
+		_r = FWRITE('dic/memo.dic', '{')
+		_r = FWRITE('dic/memo.dic', CHR(9) + "'rewritten'")
+		_r = FWRITE('dic/memo.dic', '}')
+		_r = FCLOSE('dic/memo.dic')
+		'rewritten'
+	}
+	elseif _case == 'delete' {
+		'deleted ' + FDEL('data/shipped.txt') + FDEL('var/note.txt')
+	}
+	elseif _case == 'tick' {
+		GETTICKCOUNT()
+	}
+	elseif _case == 'env' {
+		GETENV('HOME') + '|' + GETLASTERROR()
+	}
+	elseif _case == 'mem' {
+		TOSTR(GETMEMINFO())
+	}
+	elseif _case == 'exec' {
+		EXECUTE('notepad.exe') + '|' + EXECUTE_WAIT('notepad.exe')
+	}
+	elseif _case == 'fenum' {
+		FENUM(_arg)
+	}
+	elseif _case == 'fsize' {
+		FSIZE(_arg)
+	}
+	elseif _case == 'open' {
+		_r = FOPEN(_arg, 'r')
+		_s = FSIZE(_arg)
+		_c = FCLOSE(_arg)
+		'open ' + _r + ', size ' + _s
+	}
+	elseif _case == 'read' {
+		_out = ''
+		if FOPEN(_arg, 'r') == 1 {
+			while 1 {
+				_l = FREAD(_arg)
+				if _l == -1 {
+					break
+				}
+				_out += _l + '|'
+			}
+			_r = FCLOSE(_arg)
+		}
+		_out
+	}
+	elseif _case == 'sjisout' {
+		_r = SETSETTING('charset.output', 'Shift_JIS')
+		'こんにちは①～髙'
+	}
+}

@@ -1,0 +1,4 @@
+charset,Shift_JIS
+type,ghost
+name,Kawari7 Test
+directory,kawari7test

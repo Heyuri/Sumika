@@ -1,0 +1,8 @@
+charset,UTF-8
+type,ghost
+name,YAYA Test
+sakura.name,Yayako
+kero.name,Kero
+craftman,Sumika tests
+craftmanw,Sumika tests
+shiori,yaya.dll

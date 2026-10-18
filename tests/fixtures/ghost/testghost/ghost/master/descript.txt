@@ -1,0 +1,8 @@
+charset,UTF-8
+type,ghost
+name,Test Ghost
+sakura.name,Testy
+kero.name,
+craftman,Sumika tests
+craftmanw,Sumika tests
+shiori,satori.dll

@@ -1,0 +1,23 @@
+#
+# kawaritest: helpers for tests/kawari_engine.test.mjs. `debugger on` (kawarirc.kis) lets GET ShioriEcho evaluate its
+# Reference0 as a script, so the tests read these words with ${name}.
+#
+# half-width kana in entry names (patch K3), and 0x5C trail bytes in a word (É\ï\î\)
+∂≈ : ÇÕÇÒÇ©Ç≠
+±•≤ : Ç»Ç©ÇƒÇÒ
+word : É\ï\î\Å`Å|á@Å_˚¸
+
+# a runaway recursion (the stack-restore test)
+rec : ${rec}
+
+# the SAORI kawarirc.kis registers (no DLL ships: the test's bridge answers)
+saoricall : $(callsaori echo É\ï\Å`á@)
+
+# a CRLF text file (patch K10: textload drops the CRs)
+lines : $(textload @t data/lines.txt)$(size @t)"["$(get @t[0])"]["$(get @t[1])"]"$(length $(get @t[0]))
+
+# the SSP view: the site's ghosts, another ghost's descript.txt (KEEPS' installed-ghost scan), the ghost's own shells
+ghosts : $(readdir @g ../../..)$(join @g ",")
+otherdescript : $(textload @d ../../../other/ghost/master/descript.txt)$(join @d "|")
+shells : $(readdir @s ../../shell)$(join @s ",")
+shelldescript : $(textload @d ../../shell/master/descript.txt)$(join @d "|")

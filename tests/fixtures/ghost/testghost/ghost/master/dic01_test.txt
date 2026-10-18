@@ -1,0 +1,20 @@
+＃ A minimal synthetic Satori ghost for the ghost-change tests (tests/runtime/switch*.test.mjs). UTF-8: Satori detects it.
+＃ ＄交代回数 survives in the save data, so its OnGhostChanged reply shows whether this ghost's memory came back.
+＃ A line starting with ： is spoken by \0.
+
+＊OnFirstBoot
+＄交代回数	10
+：Hello, I am Testy. First boot.
+
+＊OnBoot
+：Testy boots.
+
+＊OnGhostChanged
+＄交代回数＝（交代回数）＋１
+：Testy takes over from （Ｒ０）. Change （交代回数）.
+
+＊OnGhostChanging
+：Testy hands over to （Ｒ０）, （Ｒ１）.
+
+＊OnMouseDoubleClick
+：Testy was poked.

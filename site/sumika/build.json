@@ -1,0 +1,37 @@
+{
+  "format": 1,
+  "build": "f93ac41e4145",
+  "schema": {
+    "state": 1,
+    "prefs": 1,
+    "marker": 2,
+    "files": 1,
+    "drops": 1,
+    "choice": 1
+  },
+  "worker": "engines/worker.cc490d1031.js",
+  "engines": {
+    "satori": {
+      "js": "engines/satori.93e4cb8b89.js",
+      "wasm": "engines/satori.9ef3a45891.wasm"
+    },
+    "yaya": {
+      "js": "engines/yaya.2603a34135.js",
+      "wasm": "engines/yaya.aa39c57bf2.wasm"
+    },
+    "kawari": {
+      "js": "engines/kawari.ddc5e80c45.js",
+      "wasm": "engines/kawari.9bfa478f68.wasm"
+    },
+    "kawari7": {
+      "js": "engines/kawari7.31d9c13975.js",
+      "wasm": "engines/kawari7.420d3a4387.wasm"
+    }
+  },
+  "midi": {
+    "js": "engines/midi.96a2cdf932.js",
+    "bank": "engines/generaluser_gs.4ea5673a9e.sf3.gz"
+  },
+  "hub": "engines/hub.0a850d4744.js",
+  "control": "engines/control.d2b6c4e81f.js"
+}

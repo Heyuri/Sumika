@@ -1,0 +1,144 @@
+# -*- makefile -*-
+
+# 使用するツール類の設定
+CC = clang
+CXX = clang++
+LD = clang++
+MKDEP = mkdep
+
+# 作るライブラリ名の設定
+DYLIB_NAME_PREFIX = lib
+DYLIB_NAME_POSTFIX = .so
+
+# 注意:
+# このプログラムは wstring を使用しています。
+# お使いのコンパイラが wstring を理解しない場合は……どうにかして対処して下さい。
+
+# 追加するフラグ。
+# CXXFLAGSは必要無ければ空でも良いが、LDFLAGSはdlopen可能なライブラリを
+# 作れる設定にしなければならない。
+# -fvisibility=hidden は load / request などの入口（DLLEXPORT）以外を公開しないため。
+# 同梱の SQLite などがホスト側の同名の関数と入れ替わらないようにする。
+CXXFLAGS = -O3 -Wall -fPIC -std=c++11 -fvisibility=hidden -fvisibility-inlines-hidden
+CFLAGS = -O3 -Wall -fPIC -fvisibility=hidden
+LDFLAGS = -shared -lpthread
+
+################## これより下は弄らなくてもコンパイル出来ます ##################
+
+# _FILE_OFFSET_BITS=64 は 32bit 環境でも 2GB を超えるファイルを扱えるようにするため
+CXXFLAGS_ADD = -DPOSIX -D_FILE_OFFSET_BITS=64 -I.
+
+LIBAYA5_OBJ = \
+	aya5.o \
+	ayavm.o \
+	basis.o \
+	ccct.o \
+	comment.o \
+	crc32.o \
+	dir_enum.o \
+	duplevinfo.o \
+	file.o \
+	file1.o \
+	function.o \
+	globalvariable.o \
+	gumbo/src/attribute.o \
+	gumbo/src/char_ref.o \
+	gumbo/src/char_ref_gperf.o \
+	gumbo/src/error.o \
+	gumbo/src/parser.o \
+	gumbo/src/string_buffer.o \
+	gumbo/src/string_piece.o \
+	gumbo/src/tag.o \
+	gumbo/src/tokenizer.o \
+	gumbo/src/utf8.o \
+	gumbo/src/util.o \
+	gumbo/src/vector.o \
+	html.o \
+	jsonxml.o \
+	lib.o \
+	lib1.o \
+	localvariable.o \
+	log.o \
+	logexcode.o \
+	manifest.o \
+	md5c.o \
+	messages.o \
+	misc.o \
+	mt19937ar.o \
+	parson/parson.o \
+	parser0.o \
+	parser1.o \
+	selecter.o \
+	sha1.o \
+	sqlite3_yaya.o \
+	sqlitedb.o \
+	sysfunc.o \
+	tinyxml2/tinyxml2.o \
+	value.o \
+	variable.o \
+	wsex.o \
+	yamltoml.o \
+	posix_utils.o
+
+LIBAYA5 = $(DYLIB_NAME_PREFIX)aya5$(DYLIB_NAME_POSTFIX)
+
+all: $(LIBAYA5)
+
+depend:
+	mkdep $(CXXFLAGS) $(CXXFLAGS_ADD) $(LIBAYA5_OBJ:.o=.cpp)
+
+clean:
+	rm -f $(LIBAYA5) $(LIBAYA5_OBJ)
+
+install:
+	cp $(LIBAYA5) /usr/local/lib/
+
+$(LIBAYA5): $(LIBAYA5_OBJ)
+	$(LD) -o $@ $(LIBAYA5_OBJ) $(LDFLAGS)
+
+# SQLiteはCとしてコンパイルする（C++では通らない）
+sqlite3_yaya.o: sqlite3_yaya.c sqlite/sqlite3.c
+	$(CC) $(CFLAGS) -o $@ -c sqlite3_yaya.c
+
+# GumboはCとしてコンパイルする（C++では通らない）
+gumbo/src/attribute.o: gumbo/src/attribute.c
+	$(CC) $(CFLAGS) -o $@ -c gumbo/src/attribute.c
+gumbo/src/char_ref.o: gumbo/src/char_ref.c
+	$(CC) $(CFLAGS) -o $@ -c gumbo/src/char_ref.c
+gumbo/src/char_ref_gperf.o: gumbo/src/char_ref_gperf.c
+	$(CC) $(CFLAGS) -o $@ -c gumbo/src/char_ref_gperf.c
+gumbo/src/error.o: gumbo/src/error.c
+	$(CC) $(CFLAGS) -o $@ -c gumbo/src/error.c
+gumbo/src/parser.o: gumbo/src/parser.c
+	$(CC) $(CFLAGS) -o $@ -c gumbo/src/parser.c
+gumbo/src/string_buffer.o: gumbo/src/string_buffer.c
+	$(CC) $(CFLAGS) -o $@ -c gumbo/src/string_buffer.c
+gumbo/src/string_piece.o: gumbo/src/string_piece.c
+	$(CC) $(CFLAGS) -o $@ -c gumbo/src/string_piece.c
+gumbo/src/tag.o: gumbo/src/tag.c
+	$(CC) $(CFLAGS) -o $@ -c gumbo/src/tag.c
+gumbo/src/tokenizer.o: gumbo/src/tokenizer.c
+	$(CC) $(CFLAGS) -o $@ -c gumbo/src/tokenizer.c
+gumbo/src/utf8.o: gumbo/src/utf8.c
+	$(CC) $(CFLAGS) -o $@ -c gumbo/src/utf8.c
+gumbo/src/util.o: gumbo/src/util.c
+	$(CC) $(CFLAGS) -o $@ -c gumbo/src/util.c
+gumbo/src/vector.o: gumbo/src/vector.c
+	$(CC) $(CFLAGS) -o $@ -c gumbo/src/vector.c
+
+.c.o:
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_ADD) -o $@ -c $<
+
+# ソースは Shift_JIS なので UTF-8 にしてからコンパイルする。変換できない文字があれば止める
+# （以前の -c は黙って捨てていた）。#line でエラーの行が元のファイルを指すようにする。
+# ヘッダは変換しない（非 ASCII はコメントだけにすること）
+.cpp.o:
+	@printf '#line 1 "%s"\n' $< > $*.tmp.cpp
+	@iconv -f CP932 -t UTF-8 $< >> $*.tmp.cpp || { rm -f $*.tmp.cpp; exit 1; }
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_ADD) -o $@ -c $*.tmp.cpp || { rm -f $*.tmp.cpp; exit 1; }
+	@rm -f $*.tmp.cpp
+
+#-include .depend
+
+.PHONY: all clean depend
+

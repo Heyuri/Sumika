@@ -1,0 +1,1 @@
+a data file that ships with the ghost (OnTest delete removes it)

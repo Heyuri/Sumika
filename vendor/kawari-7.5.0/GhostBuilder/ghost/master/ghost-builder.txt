@@ -1,0 +1,25 @@
+event.OnBoot : \u\s[10]\h\s[0]起動しました。\e
+
+event.OnClose : \h\s[0]終了します。\-
+
+
+event.OnFileDropped : \h\s[0]辞書ファイル「\_q$(escape ${system.Reference0})\_q」読み込みっ！！$(load ${system.Reference0})\e
+
+event.OnMouseDoubleClick : $(if $([ ${system.Reference3} == "0" ]) ${ghost.OnMouseDoubleClick} ${pet.OnMouseDoubleClick} )
+
+ghost.OnMouseDoubleClick : \h\s[0]\_q\*\q0[talk][話す]-\n\q1[clear][記憶クリア]-\n\q2[cancel][キャンセル]\_q\e
+
+event.OnChoiceSelect : $(eval "${menu."${system.Reference0}"}")
+
+menu.cancel : \u\s[10]\h\s[0]\_e
+
+menu.talk : ${sentence}$(if $([ ${0} == $(NULL) ]) "スクリプトがない？\e" )
+
+menu.clear : \h\s[2]本当に消しますか？\_q\n\n\*\q0[clear_go][はい]\q1[cancel][いいえ]\_q\e
+
+menu.clear_go : $(clear sentence)\h\s[0]記憶をクリアしました。\e
+
+pet.OnMouseDoubleClick : ${menu.talk}
+
+
+

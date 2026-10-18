@@ -1,0 +1,116 @@
+更新履歴
+
+2003/02/16 Phase 7.5.0
+・Sanoriさん、whoamiさんのパッチを元に国際化対応
+  使用している文字コードをCharsetヘッダに反映
+・verコマンドのライセンス表記変更
+
+
+2002/05/25 Phase 7.4.0
+・MTライブラリを修正BSD版に差し替え
+・verコマンドにライセンス表示機能追加
+・ログファイル系変更
+・BalloonOffsetのバグ修正
+・TRANSLATE SHIORI/2.6対応
+・SAORIモジュール読み込み対応
+
+
+2002/01/08 Phase 7.3.1
+    ・BalloonOffsetヘッダ対応
+
+
+2002/01/07 Phase 7.3
+    ・著作者表示ヘッダの追加(Thanks: えびさわさん)
+      これに伴ないgetversion関数廃止
+    ・NOTIFY伝達経路情報をSecurityLevelのみで判別するように変更
+    ・exprコマンドにfindposサブコマンド追加
+    ・splitコマンド追加
+    ・testコマンド仕様拡張
+
+
+2001/12/23 Phase 7.2
+
+    ・VC向けopendir、readdir、closedir最小実装(Thanks: えびさわさん)
+    ・system.communicate、system.Reference*にゴミが入る問題の解決
+      (Thanks: しのさん)
+    ・arrayコマンド追加
+
+
+2001/12/09 Phase 7.1.2
+    ・使用しないsystem.Reference*にゴミが入る問題に気休め対策
+    ・テキストファイルをkawari.iniで指定できるようにした
+    ・readdirコマンド追加(この為VCでコンパイル不可)
+    ・kis_textfile.*をkis_file.*、kawari_engine.*に統合・機能移管
+
+
+2001/11/25 Phase 7.1.1
+
+    ・ランダムクラスの初期値設定を忘れていた問題を修正
+    ・現状に合わせ、SecurituLevel 4を廃止
+
+
+2001/11/21 Phase 7.1
+
+    ・エントリのランダム呼び出しのバグ修正。同時に擬似乱数をMT法に置き換え。
+    ・マニュアルの記述ミス修正
+
+
+2001/10/31 Phase 7.0.3
+
+    ・SecurityLevelヘッダ対応
+    ・えびさわさんの華和梨Z Phase 7.0.2からkawari_engine.cppフィードバック
+
+
+2001/10/29 Phase 7.0.2
+
+    ・GhostExヘッダ対応 system.OtherGhostExで参照可能
+    ・GET Versionを再度kawari.cppに移管
+    ・SHIORI/2.6仮対応(現状Shift_JISに固定)
+    ・内部イベント追加(OnEventUnknown)
+
+
+2001/09/23 Phase 7.0.1
+
+    ・redo34以降のSenderの書式に対応
+    ・3エントリ以上のAND検索不具合を解消
+    ・SHIORI/2.3bのReference対応
+    ・tolower,toupper,textloadコマンド追加
+    ・STRING_APPEND_INATOMICを使った文字列操作の高速化
+
+
+2001/08/25 Phase 7.0.0
+
+    ・SSTP NOTIFY/1.0に関連したセキュリティ対策
+      セキュリティレベルが3未満のときは、event.OnLoad後にresource.homeurlを
+      書き換えられなくした。
+
+    ・「安全な版」が分かりやすいように、バージョン番号を上げた。
+
+
+2001/08/25 Phase 6.3.0
+
+    ・SSTP NOTIFY/1.0に関連したセキュリティ対策
+      全SHIORIリクエストのSenderをチェックするようにした。
+      kawari.iniでセキュリティレベルを指定できるようにした。
+      "redo" period 20 以上推奨。
+
+    ・Surfaceヘッダ対応
+      "redo" period 13 fix 0 から。
+
+    ・chrコマンド/sizeコマンド/entryコマンド仕様追加/pirocallコマンド仕様追加
+      ついで。
+
+    ・getコマンド
+      エントリを展開せずに参照するテスト。
+
+
+2001/08/12 Phase "sobusenkaisoku" 6.2.1
+
+    ・urllistコマンドの仕様変更
+      末尾に[2]を付けるようにした。
+      "- - -"を渡されたときに"-[2]"を出力。
+
+    ・幸水の大変更
+      Windowsでは華和梨デバッガと統合。
+
+

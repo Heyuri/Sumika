@@ -1,0 +1,120 @@
+# -*- makefile -*-
+#
+# MinGW-w64 で Windows 用の yaya.dll を作る
+#   mingw32-make -f makefile.mingw32
+#
+# 32bit の SSP で使うには i686 の MinGW-w64 でビルドすること
+# （x86_64 の MinGW-w64 では 64bit の DLL になる）
+
+# 使用するツール類の設定
+CC = gcc
+CXX = g++
+LD = g++
+WINDRES = windres
+
+# 作るライブラリ名の設定
+DYLIB_NAME_PREFIX =
+DYLIB_NAME_POSTFIX = .dll
+
+# 追加するフラグ。
+# ソースは Shift_JIS（CP932）なので、文字列リテラルを VC++ と同じく CP932 のまま扱わせる。
+# MinGW の実行時ライブラリ（libstdc++ などの DLL）を要求しないよう静的にリンクする。
+CXXFLAGS = -O3 -Wall -std=c++11 -finput-charset=CP932 -fexec-charset=CP932
+CFLAGS = -O3 -Wall
+LDFLAGS = -shared -static -s
+
+################## これより下は弄らなくてもコンパイル出来ます ##################
+
+CXXFLAGS_ADD = -DWIN32 -D_WINDOWS -DAYA5_EXPORTS -I.
+LD_ADD = -lws2_32
+
+LIBAYA5_OBJ = \
+	aya5.o \
+	ayavm.o \
+	basis.o \
+	ccct.o \
+	comment.o \
+	crc32.o \
+	dir_enum.o \
+	duplevinfo.o \
+	file.o \
+	file1.o \
+	function.o \
+	globalvariable.o \
+	gumbo/src/attribute.o \
+	gumbo/src/char_ref.o \
+	gumbo/src/char_ref_gperf.o \
+	gumbo/src/error.o \
+	gumbo/src/parser.o \
+	gumbo/src/string_buffer.o \
+	gumbo/src/string_piece.o \
+	gumbo/src/tag.o \
+	gumbo/src/tokenizer.o \
+	gumbo/src/utf8.o \
+	gumbo/src/util.o \
+	gumbo/src/vector.o \
+	html.o \
+	jsonxml.o \
+	lib.o \
+	lib1.o \
+	localvariable.o \
+	log.o \
+	logexcode.o \
+	manifest.o \
+	md5c.o \
+	messages.o \
+	misc.o \
+	mt19937ar.o \
+	parson/parson.o \
+	parser0.o \
+	parser1.o \
+	selecter.o \
+	sha1.o \
+	sqlite3_yaya.o \
+	sqlitedb.o \
+	sysfunc.o \
+	tinyxml2/tinyxml2.o \
+	value.o \
+	variable.o \
+	wsex.o \
+	yamltoml.o \
+	posix_utils.o \
+	aya5_res.o
+
+LIBAYA5 = $(DYLIB_NAME_PREFIX)yaya$(DYLIB_NAME_POSTFIX)
+
+# 動作確認用の yaya.exe（標準入出力で load/request/unload を受け付ける）
+AYA5EXE = yaya.exe
+AYA5EXE_OBJ = $(filter-out aya5.o,$(LIBAYA5_OBJ)) aya5_exe.o
+
+all: $(LIBAYA5)
+
+exe: $(AYA5EXE)
+
+clean:
+	rm -f $(LIBAYA5) $(LIBAYA5_OBJ) $(AYA5EXE) aya5_exe.o
+
+$(LIBAYA5): $(LIBAYA5_OBJ)
+	$(LD) -o $@ $(LIBAYA5_OBJ) $(LDFLAGS) $(LD_ADD)
+
+$(AYA5EXE): $(AYA5EXE_OBJ)
+	$(LD) -o $@ $(AYA5EXE_OBJ) -static -s $(LD_ADD)
+
+aya5_exe.o: aya5.cpp
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_ADD) -DAYA_MAKE_EXE -o $@ -c aya5.cpp
+
+# SQLiteはCとしてコンパイルする（C++では通らない）
+sqlite3_yaya.o: sqlite3_yaya.c sqlite/sqlite3.c
+	$(CC) $(CFLAGS) -o $@ -c sqlite3_yaya.c
+
+# エラーメッセージ（messagetxt/*.txt）を埋め込むリソース
+aya5_res.o: aya5.rc resource.h $(wildcard messagetxt/*.txt)
+	$(WINDRES) -c 932 -I. -o $@ aya5.rc
+
+.c.o:
+	$(CC) $(CFLAGS) $(CXXFLAGS_ADD) -o $@ -c $<
+
+.cpp.o:
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_ADD) -o $@ -c $<
+
+.PHONY: all exe clean

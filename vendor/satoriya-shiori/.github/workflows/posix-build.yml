@@ -1,0 +1,83 @@
+name: posix-build
+
+# 手動実行のみ。Actions タブの "Run workflow" からブランチを選んで実行する
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    name: Linux (makefile.linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build
+        working-directory: satoriya/satori
+        run: make -f makefile.linux -j"$(nproc)"
+
+      - name: Check output
+        working-directory: satoriya/satori
+        run: |
+          ls -l libsatori.so
+          file libsatori.so
+
+      # 入口の 7 個だけが公開され、内部の関数（乱数など）が公開されていないことを確かめる
+      - name: Check exported symbols
+        working-directory: satoriya/satori
+        run: |
+          nm -D --defined-only libsatori.so | grep -E ' (load|unload|request|satori_load|satori_unload|satori_request|Set_loghandler)$'
+          test "$(nm -D --defined-only libsatori.so | grep -cE ' (load|unload|request|satori_load|satori_unload|satori_request|Set_loghandler)$')" -eq 7
+          if nm -D --defined-only libsatori.so | grep -E 'init_genrand|genrand_|randomizev|gen_randomv|6Satori'; then
+            echo "internal symbols are exported"
+            exit 1
+          fi
+
+      - name: Smoke test (dlopen + SHIORI load/request/unload)
+        run: |
+          cc -o posix_smoke satoriya/test/posix/posix_smoke.c -ldl
+          mkdir ghost
+          cp satoriya/test/posix/ghost/*.txt ghost/
+          ./posix_smoke "$PWD/satoriya/satori/libsatori.so" "$PWD/ghost"
+
+  macos:
+    name: macOS (makefile.posix)
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build
+        working-directory: satoriya/satori
+        run: make -f makefile.posix -j"$(sysctl -n hw.ncpu)"
+
+      - name: Check output
+        working-directory: satoriya/satori
+        run: |
+          ls -l libsatori.bundle
+          file libsatori.bundle
+
+      # 入口の 7 個だけが公開され、内部の関数（乱数など）が公開されていないことを確かめる
+      - name: Check exported symbols
+        working-directory: satoriya/satori
+        run: |
+          nm -gU libsatori.bundle | grep -E ' _(load|unload|request|satori_load|satori_unload|satori_request|Set_loghandler)$'
+          test "$(nm -gU libsatori.bundle | grep -cE ' _(load|unload|request|satori_load|satori_unload|satori_request|Set_loghandler)$')" -eq 7
+          if nm -gU libsatori.bundle | grep -E 'init_genrand|genrand_|randomizev|gen_randomv|6Satori'; then
+            echo "internal symbols are exported"
+            exit 1
+          fi
+
+      - name: Smoke test (dlopen + SHIORI load/request/unload)
+        run: |
+          cc -o posix_smoke satoriya/test/posix/posix_smoke.c
+          mkdir ghost
+          cp satoriya/test/posix/ghost/*.txt ghost/
+          ./posix_smoke "$PWD/satoriya/satori/libsatori.bundle" "$PWD/ghost"

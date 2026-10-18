@@ -1,0 +1,310 @@
+
+#include	"Selector.h"
+
+#include <string>
+#include <algorithm>
+#include <map>
+using std::wstring;
+
+typedef wstring Condition;
+
+class Evalcator
+{
+public:
+	virtual bool evalcate_to_bool(const Condition&) =0;
+
+	virtual ~Evalcator(void) { }
+};
+
+
+
+// 同じ名前を持つ一群。
+template<typename T>
+class Family
+{
+	strvec NameVector;
+	bool ComNameFound;
+
+	// 条件式をキー、要素リストを値としたmap
+	// 要素のアドレスを重複回避（Selector / OverlapController）の識別に使っているので、
+	// 追加・削除でほかの要素のアドレスが変わらない list にする。vector にしてはいけない。
+	typedef std::list<T> Elements;
+	typedef std::map<Condition, Elements> CondsMap;
+	CondsMap m_conds_map;
+
+#if 0
+	// mapだと条件式を含む場合に順番が死ぬわけで
+
+	struct Condition
+	{
+		wstring cond_str;
+		enum { NOT_EVAL, TRUE, FALSE } eval_result;
+		int ref_coutner;
+	};
+	//みたいなのを別に持って
+
+	class Conditions : set<Condition> {
+		iterator ref(wstring name);
+		void unref(iterator);
+	};
+
+	class Elements
+	{
+		T m_t;
+		Conditions::iterator m_condition;
+	public:
+		Elements(Conditions i_conditions) {
+			m_condition = i_conditions.ref();
+		}
+		~Elements() {
+			m_condition.unref(m_condition)
+		}
+
+		bool eval(Evalcator)
+
+	};
+/*
+	vector<Elements> m_elements;
+	とかかなあ
+	- - - - - - - - - - - - - - - - - - 
+	Familyが「条件式」を持ってるのがそもそもの間違いだわね。
+	条件式へのポインタだけもって、条件式自体は独立させた方がいい。
+	「同一の条件式は一回だけ評価される」を前提とするならば。
+	速度を考えないなら全要素個数分評価しなおすのが正しい気がするが……
+	- - - - - - - - - - - - - - - - - - 
+  　条件式を外部に持っていくべきか。
+　　必要に応じて評価し、結果をキャッシュし、任意タイミングで評価をリセットする。
+  　Evalcatorに保持させるとか。
+*/
+
+#endif
+
+
+
+	// ユーザ定義の重複回避設定を適用するための「選択係」。
+	// Word/Talkへのポインタを候補として保持する。
+	Selector<const T*> m_selector;
+
+	// m_selector に渡した候補が今の要素と同じか。
+	// 無条件の群だけのときは要素が変わるまで候補も変わらないので、渡し直さずに済ませる。
+	bool m_candidates_cached;
+
+	bool is_unconditional() const
+	{
+		return m_conds_map.size() == 1 && m_conds_map.begin()->first.empty();
+	}
+
+	// 条件式を評価して候補を選び、選択係に渡す。渡した候補を返す（候補が無ければ NULL）。
+	// o_work は候補を作るための作業用。
+	const std::list<const T*>* update_selector(Evalcator& i_evalcator, std::list<const T*>& o_work)
+	{
+		if ( m_candidates_cached && is_unconditional() && !m_selector.candidates().empty() ) {
+			// 要素は常に同じ並び（list の並び）で渡しているので、選択係の候補は前回渡したものと同じ
+			return &m_selector.candidates();
+		}
+
+		select_all(i_evalcator, o_work);
+		if ( o_work.empty() ) {
+			return NULL;
+		}
+		m_selector.update_candidates(o_work);
+		m_candidates_cached = is_unconditional();
+		return &o_work;
+	}
+
+public:
+	Family() {
+		//cout << "Family()" << endl;
+		ComNameFound = false;
+		m_candidates_cached = false;
+	}
+	//~Family() { cout << "~Family()" << endl; }
+
+
+	template<typename C>
+	void get_elements_pointers(C& o_c, Evalcator* i_evalcator = NULL) const
+	{
+		for ( typename CondsMap::const_iterator i = m_conds_map.begin() ; i != m_conds_map.end() ; ++i )
+		{
+			if (!i_evalcator || (i->first.empty() || i_evalcator->evalcate_to_bool(i->first)))
+			{
+				for (typename Elements::const_iterator j = i->second.begin(); j != i->second.end(); ++j)
+				{
+					o_c.push_back(&(*j));
+				}
+			}
+		}
+	}
+
+	//コミュニケートの重複回避の際、get_element_pointersの選択処理を変えたかったのだけど
+	//他の箇所でも使っているようだったので複製ベースにする
+	template<typename C>
+	void get_elements_pointers_selectables(C& o_c, Evalcator& i_evalcator)
+	{
+		if ( m_conds_map.empty() ) { return; }
+		// getSelectables が条件式を評価して全体から選ぶので、条件の数だけ繰り返すと同じ候補が重複する。1回だけ呼ぶ。
+		std::list<const T*> selectable;
+		getSelectables(i_evalcator, selectable);
+		for (typename std::list<const T*>::const_iterator j = selectable.begin(); j != selectable.end(); ++j)
+		{
+			o_c.push_back((*j));
+		}
+	}
+
+	void set_namevec(const std::wstring &name)
+	{
+		split(name,L"\t　",NameVector);
+		
+		for ( strvec::iterator wds_it=NameVector.begin() ; wds_it!=NameVector.end() ; ++wds_it ) {
+			if ( compare_tail(*wds_it, L"「") ) {
+				if ( wds_it != NameVector.begin() ) {
+					wstring comName = *wds_it;
+					NameVector.erase(wds_it);
+					NameVector.insert(NameVector.begin(),comName);
+				}
+				ComNameFound = true;
+				break;
+			}
+		}
+	}
+	const strvec& get_namevec(void) const
+	{
+		return NameVector;
+	}
+	wstring get_comname(void) const
+	{
+		if ( ! ComNameFound || NameVector.empty() ) { return L""; }
+		return NameVector[0];
+	}
+	bool is_comname(void) const
+	{
+		return ComNameFound && !NameVector.empty();
+	}
+
+	bool empty() const { return m_conds_map.empty(); }
+	int size_of_element() const 
+	{
+		int r = 0;
+		for ( typename CondsMap::const_iterator i = m_conds_map.begin() ; i != m_conds_map.end() ; ++i )
+		{
+			r += i->second.size();
+		}
+		return r;
+	}
+	bool is_exist_element(const T& i_t) const
+	{
+		for ( typename CondsMap::const_iterator i = m_conds_map.begin() ; i != m_conds_map.end() ; ++i )
+			for ( typename Elements::const_iterator j = i->second.begin() ; j != i->second.end() ; ++j )
+				if ( *j == i_t )
+					return true;
+		return false;
+	}
+
+	// 登録
+	const T& add_element(const T& i_t, const Condition& i_condition = Condition())
+	{
+		m_candidates_cached = false;
+		Elements& lt = m_conds_map[i_condition];
+		lt.push_back(i_t);
+		return lt.back();
+	}
+	// 削除
+	void delete_element(const T& i_t, const Condition& i_condition = Condition())
+	{
+		typename CondsMap::iterator it = m_conds_map.find(i_condition);
+		if ( it == m_conds_map.end() ) { return; }
+		m_candidates_cached = false;
+		Elements& lt = it->second;
+		for ( typename Elements::iterator j = lt.begin() ; j != lt.end() ; )
+		{
+			if ( *j == i_t ) { j = lt.erase(j); }
+			else { ++j; }
+		}
+		if ( lt.empty() ) {
+			m_conds_map.erase(it);
+		}
+	}
+	
+	// 重複回避を設定
+	void set_OC(OverlapController<const T*>* i_oc)
+	{
+		m_candidates_cached = false;
+		m_selector.attach_OC(i_oc);
+	}
+	// 重複回避状況をクリア
+	void clear_OC()
+	{
+		m_selector.clear_OC();
+	}
+	// 重複回避を全部使ってしまったか
+	bool is_OC_used_all(Evalcator& i_evalcator)
+	{
+		std::list<const T*> work;
+		if ( update_selector(i_evalcator, work) == NULL ) {
+			return false;
+		}
+		return m_selector.isOCUsedAll();
+	}
+
+	// 条件式を評価して候補をすべて選ぶ。
+	// 引数は「評価者」と候補のvector。
+	template <typename Candidates>
+	void select_all(Evalcator& i_evalcator,Candidates &candidates)
+	{
+		assert(m_conds_map.size() > 0);
+		if ( m_conds_map.size() == 1 && m_conds_map.begin()->first.empty() ) {
+			// 無条件の群のみが存在する（条件式導入前と同じ状態）
+			Elements& e = m_conds_map.begin()->second;
+			assert(e.size() > 0);
+
+			for ( typename Elements::const_iterator j = e.begin() ; j != e.end() ; ++j ) {
+				candidates.push_back( &(*j) );
+			}
+		}
+		else {
+			//  候補を選択
+			for ( typename CondsMap::const_iterator i = m_conds_map.begin() ; i != m_conds_map.end() ; ++i )
+			{
+				// 「無条件」であるか「条件式を評価した結果、0/０を返さなかったもの」を採用
+				if ( i->first.empty() || i_evalcator.evalcate_to_bool(i->first) )
+				{
+					for ( typename Elements::const_iterator j = i->second.begin() ; j != i->second.end() ; ++j )
+					{
+						candidates.push_back( &(*j) );
+					}
+				}
+			}
+		}
+	}
+
+	// 選んだ候補からさらにユーザ定義の重複回避設定を適用した選択を行う。
+	// 引数は「評価者」。
+	const T* select(Evalcator& i_evalcator)
+	{
+		//重複回避枯渇取得のために、候補が1つでも m_selector を必ず動くようにする
+		std::list<const T*> work;
+		if ( update_selector(i_evalcator, work) == NULL ) {
+			return NULL;
+		}
+		return	m_selector.select();
+	}
+
+	void getSelectables(Evalcator& i_evalcator, std::list<const T*>& o_result)
+	{
+		std::list<const T*> work;
+		if ( update_selector(i_evalcator, work) == NULL ) {
+			return;
+		}
+		m_selector.getSelectables(o_result);
+	}
+
+	void applySelectedOC(Evalcator& i_evalcator, const T* selected)
+	{
+		std::list<const T*> work;
+		const std::list<const T*>* candidates = update_selector(i_evalcator, work);
+		if ( candidates == NULL ) {
+			return;
+		}
+		m_selector.applySelected(*candidates, selected);
+	}
+};

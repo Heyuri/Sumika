@@ -1,0 +1,21 @@
+GeneralUserGS.sf3: GeneralUser GS v2.0.3 (S. Christian Collins) with its samples compressed to Ogg Vorbis (SF3),
+made by SpessaSynth and shipped in the SpessaSynth web app's repository, https://github.com/spessasus/SpessaSynth
+(Apache-2.0 for the app; the bank keeps its own licence), path soundfonts/GeneralUserGS.sf3, at commit
+6f7505087eba09bdbf345c97f5cf573fc547412e (2026-04-08, "Update GeneralUser GS to 2.0.3"; the last commit touching
+soundfonts/ on 2026-10-16). Downloaded 2026-10-16 from
+  https://raw.githubusercontent.com/spessasus/SpessaSynth/6f7505087eba09bdbf345c97f5cf573fc547412e/soundfonts/GeneralUserGS.sf3
+size 8423728 bytes; sha256 e2ed326ff44d15f78f2fdc72403b6fa6b77ee7266d3aad0d2198bc95797bc66c; git blob
+74c99699936b4bd6422b1d7254bde35b465d877d (equal to the one GitHub's contents API lists). No Git LFS. Unchanged.
+Its INFO: ifil 3.0, INAM "GeneralUser GS 2.0.3 BETA", ISFT "SpessaSynth", the author's ICMT licence text unchanged.
+
+Checked against the author's SF2 (vendor/generaluser-gs-2.0.3) on 2026-10-16 (docs/research/midi.md §2): the same
+287 presets (bank:program and names), 324 instruments, 920 samples (names), the same counts of every pdta record,
+every preset's and instrument's zones equal as a multiset (generators and modulators, sample references by name),
+every sample's rate, root key, correction, link and loop points equal except one (Hammond Organ-11, 6 kHz, upsampled
+x8 to 48 kHz by SpessaSynth's compressor, loop points x8), StrLoop - F#1's loop (changed in 2.0.3) equal; every
+decoded sample aligned at lag 0, gain 1.0 (median), so no -1 dB attenuation.
+Vorbis: libVorbis 20200704 in all 920 streams; the nominal bitrates (96 kb/s mono at 44.1 kHz, 86 kb/s at 32 kHz)
+match libvorbis' quality 0.5 rows [infer], not the 0.8 the author recommends.
+Licence: as the SF2's, vendor/generaluser-gs-2.0.3/documentation/LICENSE.txt (it allows changing the packaging).
+The build publishes this file under a hashed name (docs/research/midi.md §4).
+Pinned by engines/midi/pins.json (a tree pin over this folder, this file included: the method of kawari-wasm.md §1).

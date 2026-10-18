@@ -1,0 +1,9 @@
+charset,Shift_JIS
+name,GhostBuilder
+
+sakura.name,Ghost
+kero.name,Pet
+
+sstp.allowsakura,1
+
+user.defaultname,User

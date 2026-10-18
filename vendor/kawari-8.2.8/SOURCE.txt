@@ -1,0 +1,6 @@
+KAWARI (華和梨) Phase 8.2.8, the last release (2008-03-30), by the KAWARI Development Team.
+Downloaded 2026-10-14 from
+  https://sourceforge.net/projects/kawari/files/kawari/8.2.8/kawari-828.zip/download
+sha256 of kawari-828.zip: 32416386aca63b94842120808d501838f812efdf6ea5f9dd1659c1bff848ab02
+Unpacked unchanged, without bin/ (the Windows executables shiori.dll, kosui.exe, kawari_encode.exe,
+kawari_encode2.exe, kawari_decode2.exe were left out and never run). Licence: license.txt (modified BSD).

@@ -1,0 +1,3 @@
+charset,UTF-8
+type,shell
+name,master

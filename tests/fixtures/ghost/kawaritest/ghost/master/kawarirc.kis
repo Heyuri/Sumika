@@ -1,0 +1,12 @@
+#
+# kawaritest: a tiny Kawari Phase 8 ghost of our own for the Sumika tests (tests/kawari_engine.test.mjs,
+# tests/runtime/kawari_integration.test.mjs). Shift_JIS (code page 932) with CRLF line ends, as Kawari ghosts are
+# written. kawarirc.kis is the only file Kawari reads at load: it loads the rest, then what OnUnload saved.
+#
+=kis
+debugger on;
+saoriregist saori/echo.dll echo;
+load dict-event.kis;
+load dict-test.kis;
+if $(isfile save.txt) $(load save.txt);
+=end

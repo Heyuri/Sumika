@@ -1,0 +1,5 @@
+# Every file is kept byte for byte: no line-end conversion on commit or checkout, whatever core.autocrlf says. The
+# published engine files and the index's packs are named by hashes of their bytes (site/sumika/build.json,
+# site/sumika/index/), the test ghosts are Shift_JIS with CRLF line ends as SSP ghosts are, and vendor/ keeps its
+# upstreams' files as they publish them.
+* -text

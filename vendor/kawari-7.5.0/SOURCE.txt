@@ -1,0 +1,6 @@
+KAWARI (華和梨) Phase 7.5.0 "kdt" (2003-02-17), the last Phase 7 release, by the KAWARI Development Team.
+Downloaded 2026-10-14 from
+  https://sourceforge.net/projects/kawari/files/kawari/7.5.0/kawari-750-kdt.zip/download
+sha256 of kawari-750-kdt.zip: 7a5632d529ae65d789f437da9c88991aa037dac8a5ecbb6b0301bbe132e382c2
+Unpacked unchanged, without the Windows executables shiori.dll, kosui.exe and kawari_encode.exe (left out and never
+run). Licence: license.txt (modified BSD). readme.1st (CP932) lists the patches from Phase 7.0 to 7.5.0.

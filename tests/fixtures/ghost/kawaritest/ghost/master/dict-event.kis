@@ -1,0 +1,20 @@
+#
+# kawaritest: events (Sumika tests). Every talk is fixed (no random choice). OnFirstBoot and OnBoot count the boots,
+# the menu's "talk" counts talks; OnUnload saves both (and the last communicate line) in save.txt, which kawarirc.kis
+# loads back at the next load. Text in double quotes: a bare comma would end the word.
+#
+System.Callback.OnGET : ${event.${System.Request.ID}}
+System.Callback.OnNOTIFY : ${notify.${System.Request.ID}}
+System.Callback.OnUnload : $(save save.txt boots talks lastword)
+
+event.OnFirstBoot : $(inc boots)"\0\s[0]はじめまして、かわりです。\1\s[10]ケロだよ。\e"
+event.OnBoot : $(inc boots)"\0\s[0]おかえりなさい。"${boots}"回目の起動です。\e"
+event.OnClose : "\0\s[0]さようなら。\-"
+event.OnMouseDoubleClick : "\0\s[0]どうしますか？\n\q[お話し,talk]\n\q[なにもしない,nothing]\e"
+event.OnChoiceSelect : ${choice.${System.Request.Reference0}}
+choice.talk : $(inc talks)"\0\s[0]お話ししましょう。"${talks}"回目です。\e"
+choice.nothing : "\0\s[0]わかりました。\e"
+event.OnCommunicate : $(setstr lastword ${System.Request.Reference1})"\0\s[0]「"${lastword}"」ですね。\e"
+
+notify.installedghostname : $(setstr installed ${System.Request.Reference0}","${System.Request.Reference1})
+notify.ownerghostname : $(setstr owner ${System.Request.Reference0})

@@ -1,0 +1,18 @@
+{
+ "format": 2,
+ "ghosts": [],
+ "balloons": [
+  {
+   "id": "sumika",
+   "name": "Sumika"
+  }
+ ],
+ "defaultBalloon": "sumika",
+ "manifests": {
+  "ghost": {},
+  "balloon": {
+   "sumika": "sumika/index/balloon.sumika.a87d8dad2b.json"
+  }
+ },
+ "versions": {}
+}

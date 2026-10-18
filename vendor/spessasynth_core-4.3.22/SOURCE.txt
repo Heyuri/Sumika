@@ -1,0 +1,14 @@
+spessasynth_core 4.3.22 (npm, published 2026-08-24), the SoundFont synthesizer and MIDI sequencer of SpessaSynth, by
+spessasus (https://github.com/spessasus/spessasynth_core, gitHead 99f294d997dea0f2691738c97586c6a3d289fe7d).
+The registry's latest on 2026-10-16. Downloaded 2026-10-16 from
+  https://registry.npmjs.org/spessasynth_core/-/spessasynth_core-4.3.22.tgz
+sha256 of spessasynth_core-4.3.22.tgz: ff232efdef6bdd46037098dfede1f652aec53dd6042463170144bb929af722f9
+npm dist.integrity sha512-qP6NkcZLmTLIs9fCUh2IhZRkd3Junwu8ppD4K0l/0R+Lo4P48d4Rbe8YQ8RlEYyRKFz8HcPM75sXYVQLAb7k4A==
+and shasum d1e137ec3793c2bec83f462f04ddefe760b770e3, both equal to the downloaded file's.
+Unpacked unchanged (the tarball's package/ folder, 6 files), never installed with npm (no package script ran). Its one
+runtime dependency, "stb-vorbis": "latest", is pinned as vendor/stb-vorbis-0.0.6; dist/index.js imports it by that
+bare name.
+Licence: LICENSE (Apache-2.0). Bundled inside dist/index.js: fflate (MIT, Arjun Barrett; the notice is in the
+repository's src/externals/fflate/LICENSE at the gitHead, not in the package) and the Dattorro reverb (khoin's
+DattorroReverbNode, "public domain", per its header comment). engines/midi/midi.LICENSES.txt carries them all.
+Pinned by engines/midi/pins.json (a tree pin over this folder, this file included: the method of kawari-wasm.md §1).

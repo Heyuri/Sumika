@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Runtime UI check</title>
+<style>
+  :root { color-scheme: light dark; --bg: #f4f1ea; --fg: #222; --muted: #666; --btn: #fff; --line: #ccc; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #1d1f21; --fg: #e8e6e3; --muted: #aaa; --btn: #2a2d30; --line: #444; } }
+  :root[data-theme="dark"] { --bg: #1d1f21; --fg: #e8e6e3; --muted: #aaa; --btn: #2a2d30; --line: #444; }
+  body { font: 15px/1.5 system-ui, sans-serif; margin: 0; padding: 24px 16px; background: var(--bg); color: var(--fg); }
+  main { max-width: 720px; }
+  p { color: var(--muted); }
+  .pad { margin: 16px 0; padding: 48px 16px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; user-select: none; }
+  button { font: inherit; padding: 6px 12px; margin: 0 8px 8px 0; background: var(--btn); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; }
+  pre { font-size: 12px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Runtime UI check</h1>
+  <p>Serve the repository root (<code>python tools/serve.py --site .</code>) and open <code>/site/dev/runtime.html</code>.
+     Right-click the box for the menu (the shell images of the ghost <code>?ghost=ID</code> names, default the site's
+     first ghost; fake SHIORI replies). Iconify shows the launcher.</p>
+  <div class="pad" id="pad">right-click here</div>
+  <button id="flash">fill_desktop flash</button>
+  <button id="launcher">launcher (closed)</button>
+  <pre id="log"></pre>
+</main>
+<script type="module">
+import { Menu } from '../../src/ui/menu.js';
+import { Launcher } from '../../src/ui/launcher.js';
+import { PageSaori } from '../../src/core/page-saori.js';
+import { SiteIndex } from '../../src/core/loader.js';
+import { parseDescript } from '../../src/core/loader.js';
+
+const out = document.getElementById('log');
+const say = (...a) => { out.textContent = a.join(' ') + '\n' + out.textContent; };
+const base = new URL('../', location.href).href;
+const index = await SiteIndex.load(base);
+const ghostId = new URLSearchParams(location.search).get('ghost') || (index.ghosts[0] && index.ghosts[0].id);
+if (!ghostId) { say('the site has no ghost: add one, then reload'); throw new Error('no ghost'); }
+const files = await index.ghostFiles(ghostId);
+const descript = parseDescript(await files.text('shell/master/descript.txt'));
+const replies = {
+  'recommendrootbutton.caption': 'Friends(&P)', 'portalrootbutton.caption': 'Basics(&R)',
+  'hidebutton.caption': 'Hide for a while(&H)',
+  'sakura.recommendsites': 'Example\x01https://example.com/\x01\x02-\x01\x01\x02Another example\x01https://example.org/\x01\x02',
+  'sakura.portalsites': 'Example portal\x01https://example.net/\x01\x02',
+};
+const launcher = new Launcher({ name: (index.ghost(ghostId) || {}).name || ghostId,
+  iconUrl: new URL(`ghost/${encodeURIComponent(ghostId)}/thumbnail.png`, base).href, onActivate: m => say('launcher', m) });
+const host = {
+  resources: async ids => new Map(ids.map(id => [id, replies[id] ?? null])),
+  send: (id, refs) => say('send', id, JSON.stringify(refs)),
+  playScript: s => say('play', s),
+  minimize: r => { say('minimize', r); launcher.show('minimized'); },
+  close: s => say('close', s),
+};
+const menu = new Menu({ host, stage: { shell: { descript }, resetPositions: () => say('reset positions') }, files, shellDir: 'shell/master/' });
+document.getElementById('pad').addEventListener('contextmenu', e => { e.preventDefault(); menu.open({ scope: 0, x: e.clientX, y: e.clientY }); });
+const page = new PageSaori({ files });
+document.getElementById('flash').onclick = () => page.handle({ name: 'fill_desktop', cmd: 'fill', args: ['255', '255', '240'] });
+document.getElementById('launcher').onclick = () => launcher.show('closed');
+</script>
+</body>
+</html>

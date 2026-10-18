@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SakuraScript player test</title>
+<style>
+  :root { color-scheme: light dark; --bg: #f6f6f8; --fg: #1d1d22; --box: #fff; --line: #c9c9d3; --accent: #3557c5; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #17181c; --fg: #e6e6ea; --box: #22242a; --line: #3a3d46; --accent: #8aa4ff; } }
+  body { margin: 0; padding: 16px; background: var(--bg); color: var(--fg); font: 14px/1.4 system-ui, sans-serif; }
+  h1 { font-size: 18px; margin: 0 0 12px; }
+  .cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+  @media (max-width: 760px) { .cols { grid-template-columns: minmax(0, 1fr); } }
+  textarea { width: 100%; box-sizing: border-box; height: 220px; font: 13px/1.4 ui-monospace, monospace; background: var(--box); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; padding: 8px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; align-items: center; }
+  button { font: inherit; padding: 4px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--box); color: var(--fg); cursor: pointer; }
+  .scope { border: 1px solid var(--line); border-radius: 8px; background: var(--box); padding: 8px; margin-bottom: 8px; }
+  .scope.hidden { opacity: .35; }
+  .scope header { font-size: 12px; opacity: .7; margin-bottom: 4px; }
+  .text { white-space: pre-wrap; min-height: 1.4em; font-family: "MS Gothic", ui-monospace, monospace; }
+  .link { color: var(--accent); text-decoration: underline; cursor: pointer; }
+  .img { font-size: 11px; border: 1px dashed var(--line); padding: 0 3px; }
+  pre { background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 8px; max-height: 260px; overflow: auto; font-size: 12px; }
+</style>
+</head>
+<body>
+<h1>SakuraScript player</h1>
+<div class="cols">
+  <div>
+    <textarea id="src">\1\s[10]\0\s[0]\b[2]Hello,\w4 Neighbor!\w8\n\_w[300]Pick one:\n\![*]\q[Yes,OnYes,1]\n\![*]\q[No,no]\n\_q\__q[button]Ranged choice\__q\_q\x\nAfter the click.\![raise,OnDirectSaoriCall,set,a,1]\![timerraise,1000,1,OnTimer]\e</textarea>
+    <div class="bar">
+      <button id="play">Play</button>
+      <button id="stop">Interrupt</button>
+      <button id="snap">Snapshot + replay</button>
+      <label>speed <input id="speed" type="number" value="50" min="0" step="10" style="width:5em"> ms</label>
+    </div>
+    <pre id="log"></pre>
+  </div>
+  <div id="stage"></div>
+</div>
+<script type="module">
+import { Emitter } from '../../src/core/emitter.js';
+import { ScriptPlayer } from '../../src/sakura/player.js';
+import { expandScript } from '../../src/sakura/expand.js';
+
+const $ = id => document.getElementById(id);
+const logEl = $('log');
+const log = (...a) => { logEl.textContent += a.map(x => typeof x === 'string' ? x : JSON.stringify(x)).join(' ') + '\n'; logEl.scrollTop = 1e9; };
+
+// minimal DOM stand-ins for the contract APIs
+const scopes = new Map();
+function scopeBox(n) {
+  let s = scopes.get(n);
+  if (s) return s;
+  const el = document.createElement('div');
+  el.className = 'scope hidden';
+  el.innerHTML = `<header>scope ${n} — surface <b>-</b>, balloon <b>0</b></header><div class="text"></div>`;
+  [...$('stage').children].find(c => +c.dataset.n > n)?.before(el) || $('stage').append(el);
+  el.dataset.n = n;
+  s = { el, text: el.querySelector('.text'), surf: el.querySelectorAll('b')[0], kind: el.querySelectorAll('b')[1] };
+  scopes.set(n, s);
+  return s;
+}
+class View extends Emitter {
+  constructor(n) { super(); this.n = n; this.box = scopeBox(n); this.out = this.box.text; this.links = 0; this.visible = false; }
+  _show() { this.visible = true; this.box.el.classList.remove('hidden'); }
+  setKind(k) { if (k < 0) this.hide(); else this.box.kind.textContent = k; }
+  resetKind() { this.box.kind.textContent = '0'; }
+  show() { this._show(); } hide() { this.visible = false; this.box.el.classList.add('hidden'); }
+  clear() { this.box.text.textContent = ''; this.out = this.box.text; this.links = 0; }
+  clearChars() {} clearLines() {}
+  write(t) { this.out.append(t); if (/[^ 　\t]/.test(t)) this._show(); }
+  newline(r = 1) { this.out.append(r < 1 ? '\n' : '\n'); }
+  locate() {}
+  image(p, x) { const s = document.createElement('span'); s.className = 'img'; s.textContent = p.split(/[\\/]/).pop() + (x === 'inline' ? '' : ' @' + x); this.out.append(s); this._show(); }
+  setFont() {} setNoWrap() {}
+  marker() { this.out.append('• '); this._show(); }
+  beginLink(info) { const s = document.createElement('span'); s.className = 'link'; s.onclick = () => balloons.emit('link', { ...info, scope: this.n }); this.out.append(s); this.out = s; this.links++; }
+  endLink() { this.out = this.box.text; }
+  addChoice(label, info) { const s = document.createElement('span'); s.className = 'link'; s.textContent = label; s.onclick = () => balloons.emit('link', { ...info, scope: this.n }); this.out.append(s); this.links++; this._show(); }
+  get hasLinks() { return this.links > 0; }
+  showClickWait(on) { this.box.el.style.outline = on ? '2px solid var(--accent)' : ''; }
+}
+const views = new Map();
+const balloons = new (class extends Emitter {
+  get(n) { if (!views.has(n)) views.set(n, new View(n)); return views.get(n); }
+  hideAll() { for (const v of views.values()) v.hide(); }
+})();
+const chars = new Map();
+const stage = {
+  char(n) {
+    if (!chars.has(n)) chars.set(n, { setSurface: id => { scopeBox(n).surf.textContent = id; return true; }, startAnimation() {}, stopAnimation() {},
+      isAnimating: () => false, bind: (c, p, v) => log('bind', n, c, p, v), rect: { x: 0, y: 0, width: 100, height: 100 },
+      basePoint: { x: 50, y: 100 }, moveTo: (x, y) => log('moveTo', n, x, y), setAlignment: m => log('align', n, m), setScaling() {} });
+    return chars.get(n);
+  },
+  get scopes() { return [...chars.keys()]; },
+};
+const host = {
+  raise: (id, refs, o) => { log('raise', id, refs, o); return new Promise(r => setTimeout(() => r(null), 100)); },
+  timerRaise: (...a) => log('timerRaise', ...a), openUrl: u => log('openUrl', u), sound: (...a) => log('sound', ...a),
+  setOption: (...a) => log('setOption', ...a), openBox: (...a) => log('openBox', ...a), closeBox: (...a) => log('closeBox', ...a),
+  windowState: s => log('windowState', s), change: (...a) => log('change', ...a), quit: () => log('quit'), vanish: () => log('vanish'),
+  raiseProperty: (id, names) => { log('raiseProperty', id, names); return Promise.resolve(null); },
+  setProperty: (...a) => log('setProperty', ...a), openWindow: (...a) => { log('openWindow', ...a); return false; },
+  unknownTag: raw => log('ignored', raw),
+};
+// %-variables are expanded before play, as the event loop does (properties.md §2): %username is a fixed word here,
+// every %property fails (removed)
+const envVar = n => (n === 'username' ? 'Neighbor' : null);
+const expand = s => expandScript(s, n => (n === 'property' ? null : envVar(n)));
+// clicking a balloon box resumes \x
+$('stage').addEventListener('click', e => { const b = e.target.closest('.scope'); if (b && !e.target.closest('.link')) balloons.emit('click', { scope: +b.dataset.n, button: 0 }); });
+
+const player = new ScriptPlayer({ stage, balloons, host });
+player.on('end', r => log('end', r));
+player.on('link', l => log('link', l));
+$('play').onclick = () => { player.speedMs = +$('speed').value || 0; player.play(expand($('src').value), { event: 'manual' }); };
+$('stop').onclick = () => player.interrupt();
+$('snap').onclick = () => {
+  const rs = player.runState();
+  log('runState', rs && { ip: rs.ip, sub: rs.sub, state: rs.state });
+  if (!rs) return;
+  for (const v of views.values()) { v.clear(); v.hide(); }
+  player.replay(JSON.parse(JSON.stringify(rs)));
+};
+</script>
+</body>
+</html>

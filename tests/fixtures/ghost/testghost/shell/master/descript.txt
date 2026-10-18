@@ -1,0 +1,5 @@
+charset,UTF-8
+type,shell
+name,master
+sakura.balloon.offsetx,0
+sakura.balloon.offsety,10

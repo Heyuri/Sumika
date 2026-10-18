@@ -1,0 +1,8 @@
+charset,Shift_JIS
+type,ghost
+name,Kawari7 Test
+sakura.name,Ç»Ç»
+kero.name,ÉPÉç
+craftman,Sumika tests
+craftmanw,Sumika tests
+shiori,shiori.dll

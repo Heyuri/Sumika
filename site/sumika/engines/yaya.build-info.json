@@ -1,0 +1,17 @@
+{
+ "yaya": "e69fefb2c713360eef590fa031d63135586a0933",
+ "version": "Tc606-2",
+ "submodules": {
+  "deelx": "af1a690cc8333620ca4f86f46058bb9b8eaf055f",
+  "gumbo": "c8846007c4d9a86046102c99fdbbd295f366f813",
+  "parson": "ec53fb6528b45811df9db0db22cab96a94a96a11",
+  "sqlite": "f0bc67bdbde2f8ebebc72a7bd02d342541814ab0",
+  "tinyxml2": "007577b22c50b4d8bc72f127644669f4096773bb"
+ },
+ "drift": false,
+ "emcc": "6.0.11 (a0014542110d6078c3a1a7941fa1ddb3a2281f16)",
+ "patches": 43,
+ "jsPatches": 3,
+ "opt": "O2",
+ "debug": false
+}

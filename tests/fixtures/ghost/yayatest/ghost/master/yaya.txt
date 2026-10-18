@@ -1,0 +1,5 @@
+// yayatest: YAYA's config (yaya.dll reads yaya.txt). UTF-8.
+charset, UTF-8
+dic, dic/base.dic
+dic, dic/events.dic
+dic, dic/memo.dic

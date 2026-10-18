@@ -1,0 +1,54 @@
+{
+ "format": 1,
+ "deno": {
+  "version": "2.9.7",
+  "release": "https://github.com/denoland/deno/releases/tag/v2.9.7",
+  "dir": "toolchain/deno-2.9.7",
+  "cli": {
+   "file": "deno-x86_64-pc-windows-msvc.zip",
+   "url": "https://github.com/denoland/deno/releases/download/v2.9.7/deno-x86_64-pc-windows-msvc.zip",
+   "size": 42630221,
+   "sha256": "a0c3101b4158d1dfb7d6a78a7bf0f3de80c96bb423c152beec8beb22786f2238",
+   "member": "deno.exe",
+   "memberSize": 97462048
+  },
+  "denort": {
+   "windows-x64": {
+    "target": "x86_64-pc-windows-msvc",
+    "file": "denort-x86_64-pc-windows-msvc.zip",
+    "url": "https://github.com/denoland/deno/releases/download/v2.9.7/denort-x86_64-pc-windows-msvc.zip",
+    "size": 32692172,
+    "sha256": "1ed45440e881cbadbfa754c8dd25c70635bf3b16a5ad663f65ec3c5cc4a975fd",
+    "member": "denort.exe",
+    "memberSize": 79790592
+   },
+   "macos-arm64": {
+    "target": "aarch64-apple-darwin",
+    "file": "denort-aarch64-apple-darwin.zip",
+    "url": "https://github.com/denoland/deno/releases/download/v2.9.7/denort-aarch64-apple-darwin.zip",
+    "size": 28741449,
+    "sha256": "b0a08debcba347f9bf2391ac0e12f99f27c7a375ad561baeccb35f01369acda4",
+    "member": "denort",
+    "memberSize": 67596184
+   },
+   "macos-x64": {
+    "target": "x86_64-apple-darwin",
+    "file": "denort-x86_64-apple-darwin.zip",
+    "url": "https://github.com/denoland/deno/releases/download/v2.9.7/denort-x86_64-apple-darwin.zip",
+    "size": 31598122,
+    "sha256": "4f909123297d4921d72f70effea23b65d7ef8b9f40de6d3351d28eef7b9e884c",
+    "member": "denort",
+    "memberSize": 79581144
+   },
+   "linux-x64": {
+    "target": "x86_64-unknown-linux-gnu",
+    "file": "denort-x86_64-unknown-linux-gnu.zip",
+    "url": "https://github.com/denoland/deno/releases/download/v2.9.7/denort-x86_64-unknown-linux-gnu.zip",
+    "size": 34409117,
+    "sha256": "ab416b7470f3f7c6d7b4363be475e5d8cf3d8469d866b3b8459a332a5874cd0d",
+    "member": "denort",
+    "memberSize": 104561432
+   }
+  }
+ }
+}

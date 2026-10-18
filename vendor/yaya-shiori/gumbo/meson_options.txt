@@ -1,0 +1,4 @@
+option('tests', type: 'boolean', value: true)
+option('examples', type: 'boolean', value: false)
+option('fuzz', type: 'boolean', value: false)
+option('python', type: 'boolean', value: false)

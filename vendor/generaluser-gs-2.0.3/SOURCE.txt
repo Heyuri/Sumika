@@ -1,0 +1,27 @@
+GeneralUser GS v2.0.3 (2026-02-22), a Roland GS and General MIDI SoundFont bank by S. Christian Collins
+(https://www.schristiancollins.com/generaluser), from the author's own repository
+https://github.com/mrbumpy409/GeneralUser-GS at commit 684543d5e5efaef08d02be50dcda8d552478fa60 (2026-02-23, the
+head of main on 2026-10-16; the SoundFont came in with 97049183643d5fc5a9322a69c5b09efb667c6c3a "Update SoundFont to
+v2.0.3 and documentation to r5"). The repository has no release and no tag; no Git LFS (no .gitattributes; the raw
+URL serves the whole file). Downloaded 2026-10-16 from
+  https://raw.githubusercontent.com/mrbumpy409/GeneralUser-GS/684543d5e5efaef08d02be50dcda8d552478fa60/<path>
+
+  path                          bytes     sha256                                                            git blob
+  GeneralUser-GS.sf2            32319396  9575028c7a1f589f5770fccc8cff2734566af40cd26ed836944e9a5152688cfe  298b552d2e9d1307e03e5c5c99d2c046aaed9ec3
+  README.md                         1049  f1a5d1ef99591763617689d064e57113b1db900a920e145233aa2789331e085a  342a69063e8ff55b5e2f01f79f43b1792718dc12
+  documentation/LICENSE.txt         2317  7b32efefdf95ce38a043799f0659853ddc00fbaa14d8c50f0aca16b9b8b405be  f8fc9c58d7574f2b0ce6cea86ff49192540bcc33
+  documentation/README.md          67719  fb23217ca2a9cf199e04aed1b04a7e81e024330411941c3638302e081584c151  96ecff6441d52b3fb6d3c6498c34fa4477957ec7
+  documentation/CHANGELOG.md       15928  2ed3138c31d43c8a36e106703679e3ec88bf579da7c34051bd9531ec08939b44  a56a0ae0b32709b7e1627d567b2116e0950a955b
+
+Each git blob SHA-1 (of "blob <size>\0" + bytes) equals the one GitHub's contents API lists for that path.
+Unchanged; the rest of the repository (demo MIDIs, support files, README.html/.pdf, percussion map) was not taken.
+The SF2's own INFO says INAM "GeneralUser GS 2.0.3 BETA", ICRD "Tuesday 15 October 2024, 09:47:28", ISFT "Polyphone":
+the author's file as released, the name tag included.
+Licence: documentation/LICENSE.txt (GeneralUser GS License v2.0; also embedded as the bank's ICMT). Use and
+modification are free; a website should host its own copy, never link to the author's downloads.
+GeneralUser-GS.sf2 is the lossless original: the reference of the 8.4 MB SF3 that Sumika ships
+(vendor/generaluser-gs-2.0.3-sf3, docs/research/midi.md), and kept for a later "better sound" choice. It is not in the
+repository (32 MB): to compare, put the author's file of the commit above into this folder (its size and SHA-256: the
+table above, and engines/midi/pins.json "reference"). Never published.
+Pinned by engines/midi/pins.json (a tree pin over this folder with the SF2 in place, this file included: the method
+of kawari-wasm.md §1).

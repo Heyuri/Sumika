@@ -1,0 +1,15 @@
+charset,UTF-8
+type,shell
+name,Winter
+craftman,Sumika tests
+sakura.balloon.offsetx,6
+sakura.balloon.offsety,16
+sakura.bindgroup0.name,Scarf,Blue,
+sakura.bindgroup1.name,Scarf,Red,
+sakura.bindgroup1.default,1
+sakura.bindgroup2.name,Hat,Straw,
+sakura.bindoption.group,Scarf,mustselect
+sakura.menuitem2,2
+sakura.menuitem0,1
+sakura.menuitem1,-
+sakura.menuitem4,0

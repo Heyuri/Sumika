@@ -1,0 +1,2219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<HTML lang="ja">
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=SHIFT_JIS">
+<META http-equiv="Content-Script-Type" content="text/javascript">
+<META http-equiv="Content-Style-Type" content="text/css">
+<TITLE>華和梨インラインスクリプト リファレンス</TITLE>
+
+<STYLE>
+<!--
+BODY {
+	padding: 1em 8% 1em 8%;
+	line-height: 140%;
+}
+PRE {
+	padding: 8px;
+	margin: 0;
+	border-width: 2px;
+	border-color: #a0a0ff;
+	border-style: solid;
+}
+P {
+	text-indent: 1em;
+	line-height: 140%;
+}
+TABLE{
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+CAPTION{
+	padding-top: 8px;
+	padding-left: 2em;
+	font-weight: bold;
+	text-allign: left;
+}
+TR TD{
+	vertical-align: top;
+	text-align: left;
+}
+TR.genre{
+	font-style: italic;
+	text-indent: 1em;
+}
+
+H2 {
+	border-color: #6060c0;
+	border-width: 2px 2px 2px 1em;
+	padding: 0.1em 0 0.1em 0.5em;
+	border-style: solid;
+}
+
+H3 {
+	border-color: #6060c0;
+	border-width: 0 0 1px 0;
+	border-style: solid;
+	padding-left: 1em;
+}
+
+
+A { text-decoration: none; }
+A:link { color: #7070ff; }
+A:visited { color: #7070ff; }
+A:hover { color: orange; text-decoration: underline; }
+A:active { background: crimson; color: white; }
+
+DIV.title{
+	width: 90%;
+	text-align: left;
+}
+
+P.h1 { font: 700 140%;  }
+P.pre {
+	text-indent: 0;
+	font-family: sans-serif;
+	font-size: 90%;
+	padding: 8px;
+	margin: 0;
+	border-width: 2px;
+	border-color: #a0a0ff;
+	border-style: solid;
+}
+TABLE.command_table {
+	padding: 8px;
+	border-width: 2px;
+	border-color: #ffa0a0;
+	border-style: solid;
+}
+TABLE.command_table CAPTION{
+	background: #ffa0a0;
+}
+TABLE.command_table TR.genre{
+	color: #4040ff;
+}
+
+TABLE.command {
+	padding: 8px;
+	border-width: 2px;
+	border-color: #a0a0ff;
+	border-style: solid;
+}
+TABLE.command CAPTION{
+	background: #a0a0ff;
+}
+
+SPAN.tt {
+	font-family: monospace;
+}
+// -->
+</STYLE>
+<BODY text="black" bgcolor="white">
+
+<DIV align="center">
+<DIV class="title">
+	<P class="h1">
+	プログラマブル準AIモジュール
+	</P><P class="h1">
+	「"華和梨" for あれ以外の何か以外の何か」<BR>
+	華和梨インラインスクリプト リファレンスマニュアル
+	</P>
+	<DIV align="right">
+		<P>
+		2002/05/25<BR>
+		Phase 7.4.0
+		</P><P>
+		華和梨開発チーム<BR><BR>
+		NAKAUE.T (Meister)<BR>
+		夢乃 (偽Meister)<BR>
+		酔狂<BR>
+		さとー
+		</P>
+	</DIV>
+</DIV>
+</DIV>
+
+<H2>Index</H2>
+
+<BLOCKQUOTE>
+<A href="#gaiyou">1. 概要</A><BR>
+<A href="#shoshiki">2. 書式</A><BR>
+<A href="#hyouka">3. 評価、戻り値、真偽の判定</A><BR>
+<A href="#command">4. コマンド</A><BR>
+　<A href="#commandlist">4.1. コマンド一覧</A><BR>
+　<A href="#commandref">4.2. コマンドリファレンス</A><BR>
+　　<A href="#syntax">4.2.1. 構文</A><BR>
+　　<A href="#dic-handle">4.2.2. コマンド-辞書操作</A><BR>
+<!--　　<A href="#dic-handle-sp">4.2.x. コマンド-特殊辞書操作</A><BR> -->
+　　<A href="#file-io">4.2.3. コマンド-ファイル操作</A><BR>
+　　<A href="#counter">4.2.4. コマンド-カウンタ</A><BR>
+　　<A href="#calc">4.2.5. コマンド-評価・比較</A><BR>
+　　<A href="#saori">4.2.6. コマンド-SAORI</A><BR>
+　　<A href="#output">4.2.7. コマンド-出力</A><BR>
+　　<A href="#aux">4.2.8. コマンド-補助機能</A><BR>
+<!--　　<A href="#communicate">4.2.x. コマンド-コミュニケート</A><BR> -->
+　　<A href="#othercmd">4.2.9. コマンド-その他</A><BR>
+<A href="#appendix">Appendix</A><BR>
+　<A href="#apdx1">I. インラインスクリプトの追加方法</A><BR>
+　<A href="#apdx2">II. 注釈</A><BR>
+</BLOCKQUOTE>
+
+<A name="gaiyou"></A>
+<H2>1. 概要</H2>
+
+<P>
+華和梨インラインスクリプト(KIS : Kawari Inline Script)は、
+華和梨の辞書ファイル中で使用できる簡易言語です。
+インラインスクリプトを使用することにより、
+華和梨実行中に辞書へ単語を追加したり、
+本体から通知されるイベントに応じた処理を行ったりすることができます。
+</P>
+
+<A name="shoshiki"></A>
+<H2>2. 書式</H2>
+
+<P>
+インラインスクリプトは、単語中に「<SPAN class="tt">$(～)</SPAN>」
+で囲んで記述します。一つの「$(～)」で囲まれた塊を、「ブロック」と呼びます。
+一つのブロックの中には、複数の文を記述できます。
+文と文の間は「<SPAN class="tt">;</SPAN>」(セミコロン)で区切ります。
+一つの文は、一つのコマンドと零個以上の引数から構成されます。
+コマンド、セミコロン、各引数の間は、それぞれ一つ以上の空白で区切ります。
+</P>
+
+<PRE>
+  インラインスクリプト:
+    ブロック
+
+  ブロック:
+    $(文)
+    $(文 ; 文 ; …)
+
+  文:
+    コマンド名 引数1 引数2 …
+</PRE>
+
+<A name="hyouka"></A>
+<H2>3. 評価、戻り値、真偽の判定</H2>
+
+<P>
+ブロックがイベント呼び出し、発話要求等を通じて華和梨に解釈されることを、
+「評価」と呼びます。ブロックは評価されると、「戻り値」を返します。
+戻り値は一つの文字列で、どのような戻り値を返すかはコマンドによって異なります。
+コマンドによっては、つねに「""」(空文字列)を返すこともあります。
+</P><P>
+ブロックが複数の文から成る場合、ブロックの戻り値は、
+ブロック中の全ての文の戻り値を順に繋げたものです。
+なお、ブロックから戻り値を返したくない場合、
+<A href="#silent">silent</A>コマンドを使用すれば抑制できます。
+</P><P>
+華和梨が戻り値を評価し、ブール代数における「真」か「偽」かを判定する際、
+次のような基準で判定します。
+</P>
+<UL>
+	<LI>空文字列「""」、文字列「"0"」、文字列「"false"」ならば「偽」</LI>
+	<LI>「偽」以外ならば「真」("ほげ"、"1"、"true"、" "(空白)...)</LI>
+</UL>
+<P>
+この真偽の判定は、後述する構文コマンド、関数コマンド問わず共通です。
+コマンドを独自に追加する場合、真偽の判定はこの基準に合わせて下さい。
+</P>
+
+<A name="command"></A>
+<H2>4. コマンド</H2>
+
+<P>
+コマンドは大きく分けて、<A href="#if">if</A>コマンドや
+<A href="#while">while</A>コマンドのような「構文コマンド」と、
+<A href="#adddict">adddict</A>コマンドや<A href="#date">date</A>コマンドの
+ような「関数コマンド」の二つに分類できます。
+構文コマンドは与えられた条件の真偽に従い、処理の流れを制御します。一方、
+関数コマンドは与えられた引数に従い、実際の処理を行います。
+<SUP><FONT size="-1"><A href="#ref1">*1</A></FONT></SUP>
+<SUP><FONT size="-1"><A href="#ref2">*2</A></FONT></SUP>
+</P><P>
+混同する恐れの無い場合、構文コマンドは「構文」、関数コマンドは単に
+「コマンド」と呼ぶことがあります。
+</P>
+
+<A name="commandlist"></A>
+<H3>4.1. コマンド一覧</H3>
+
+<DIV align="center">
+
+<TABLE class="command_table" width="80%">
+<CAPTION align="left">構文コマンド</CAPTION>
+<TR><TD><A href="#if">if</A></TD><TD>条件判断</TD></TR>
+<TR><TD><A href="#foreach">foreach</A></TD><TD>指定エントリ中のすべての単語に対しコマンド実行</TD></TR>
+<TR><TD><A href="#loop">loop</A></TD><TD>指定回数ループ</TD></TR>
+<TR><TD><A href="#silent">silent</A></TD><TD>ブロックの出力を抑制</TD></TR>
+<TR><TD><A href="#until">until</A></TD><TD>条件が成立するまでループ</TD></TR>
+<TR><TD><A href="#while">while</A></TD><TD>条件が成立している間ループ</TD></TR>
+<TR><TD><A href="#NULL">NULL</A></TD><TD>空文字列</TD></TR>
+<TR><TD><A href="#randomselect">?</A></TD><TD>ランダム選択</TD></TR>
+</TABLE>
+
+<BR clear="all">
+
+<TABLE class="command_table" width="80%">
+<CAPTION align="left">関数コマンド</CAPTION>
+<TR class="genre"><TD colspan="2">辞書操作</TD></TR>
+<TR><TD><A href="#adddict">adddict</A></TD><TD>エントリに単語を追加</TD></TR>
+<TR><TD><A href="#array">array</A></TD><TD>エントリを配列的に参照</TD></TR>
+<TR><TD><A href="#clear">clear</A></TD><TD>エントリを消去</TD></TR>
+<TR><TD><A href="#enumerate">enumerate</A></TD><TD>エントリの全単語を列挙</TD></TR>
+<TR><TD><A href="#get">get</A></TD><TD>エントリを評価せずに参照</TD></TR>
+<TR><TD><A href="#set">set</A></TD><TD>エントリに単語をセット</TD></TR>
+<TR><TD><A href="#size">size</A></TD><TD>エントリ中の単語数を数える</TD></TR>
+<!--
+<TR class="genre"><TD colspan="2">特殊辞書操作</TD></TR>
+<TR><TD><A href="#pop">pop</A></TD><TD>※Phase6では使用不可</TD></TR>
+<TR><TD><A href="#push">push</A></TD><TD>※Phase6では使用不可</TD></TR>
+<TR><TD><A href="#shift">shift</A></TD><TD>※Phase6では使用不可</TD></TR>
+<TR><TD><A href="#unshift">unshift</A></TD><TD>※Phase6では使用不可</TD></TR>
+-->
+<TR class="genre"><TD colspan="2">ファイル操作</TD></TR>
+<TR><TD><A href="#load">load</A></TD><TD>華和梨形式辞書ファイルを読み込む</TD></TR>
+<TR><TD><A href="#readdir">readdir</A></TD><TD>ディレクトリを読み込む</TD></TR>
+<TR><TD><A href="#save">save</A></TD><TD>エントリをファイルに保存</TD></TR>
+<TR><TD><A href="#savecrypt">savecrypt</A></TD><TD>エントリをファイルに暗号化して保存</TD></TR>
+<TR><TD><A href="#textload">textload</A></TD><TD>テキストファイルを読み込む</TD></TR>
+<TR class="genre"><TD colspan="2">カウンタ</TD></TR>
+<TR><TD><A href="#dec">dec</A></TD><TD>指定エントリの単語を数字と見なし減算する</TD></TR>
+<TR><TD><A href="#inc">inc</A></TD><TD>指定エントリの単語を数字と見なし加算する</TD></TR>
+<TR class="genre"><TD colspan="2">評価・比較</TD></TR>
+<TR><TD><A href="#expr">expr</A></TD><TD>式を評価する</TD></TR>
+<TR><TD><A href="#test">test</A></TD><TD>値を比較する</TD></TR>
+<TR class="genre"><TD colspan="2">SAORI</TD></TR>
+<TR><TD><A href="#saoriregist">saoriregist</A></TD><TD>SAORIを登録する</TD></TR>
+<TR><TD><A href="#saorierase">saorierase</A></TD><TD>登録を解除する</TD></TR>
+<TR><TD><A href="#callsaori">callsaori</A></TD><TD>登録したSAORIを呼び出す</TD></TR>
+<TR><TD><A href="#callsaorix">callsaorix</A></TD><TD>登録したSAORIを呼び出す(高機能版)</TD></TR>
+<TR class="genre"><TD colspan="2">出力</TD></TR>
+<TR><TD><A href="#echo">echo</A></TD><TD>引数を空白文字で接続して返す</TD></TR>
+<TR><TD><A href="#escape">escape</A></TD><TD>引数内のさくらスクリプトをエスケープする</TD></TR>
+<TR class="genre"><TD colspan="2">補助機能</TD></TR>
+<TR><TD><A href="#chr">chr</A></TD><TD>指定した文字コードの一文字を返す</TD></TR>
+<TR><TD><A href="#entry">entry</A></TD><TD>エントリを呼び出す</TD></TR>
+<TR><TD><A href="#eval">eval</A></TD><TD>単語を再評価</TD></TR>
+<TR><TD><A href="#pirocall">pirocall</A></TD><TD>内蔵piroを呼び出す</TD></TR>
+<TR><TD><A href="#split">split</A></TD><TD>文字列を区切り文字で分解</TD></TR>
+<TR><TD><A href="#urllist">urllist</A></TD><TD>SHIORI/2.5形式のおすすめリストを出力する</TD></TR>
+<!--
+<TR class="genre"><TD colspan="2">コミュニケート</TD></TR>
+<TR><TD><A href="#searchghost">searchghost</A></TD><TD>※Phase6では使用不可</TD></TR>
+-->
+<TR class="genre"><TD colspan="2">その他</TD></TR>
+<TR><TD><A href="#date">date</A></TD><TD>日時を指定フォーマットで返す</TD></TR>
+<TR><TD><A href="#help">help</A></TD><TD>KISコマンドオンラインヘルプ</TD></TR>
+<TR><TD><A href="#rand">rand</A></TD><TD>ランダムな整数を返す</TD></TR>
+<TR><TD><A href="#tolower">tolower</A></TD><TD>アルファベットを小文字にする</TD></TR>
+<TR><TD><A href="#toupper">toupper</A></TD><TD>アルファベットを大文字にする</TD></TR>
+<TR><TD><A href="#ver">ver</A></TD><TD>バージョン番号取得</TD></TR>
+</TABLE>
+</DIV>
+
+<A name="commandref"></A>
+<H3>4.2. コマンドリファレンス</H3>
+<A name="syntax"></A>
+<H4>4.2.1. 構文</H4>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	if<A name="if"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(if 条件文 真の場合の文 偽の場合の文)<BR>
+		$(if 条件文 真の場合の文)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		真の場合の文、または偽の場合の文の戻り値
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		条件文の真偽に応じ、真の場合の文、または偽の場合の文を
+		実行する。
+		条件文にインラインスクリプトを用いる場合には、$()で囲む。
+		真の場合の文、偽の場合の文も同様。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例1
+  $(if $([ ${mode} == "Y" ]) "\h\はい\e" "\hいいえ\e")
+    # modeエントリの内容で検索したものが"Y"の場合、「はい」と表示
+    # それ以外の場合は「いいえ」と表示
+
+例2
+  $(if "true" $(set a "1" ; set b "2") )
+    # aエントリの内容は1、bエントリの内容は2になる
+    # マルチステートメント(複文)を使っている
+
+例3
+  a : 1
+  b : 2
+  $(if $([ ${a} == "1" ]) $(if $([ ${b} == "2"]) "あたり" "はずれ") "はずれ")
+    # if文の入れ子の例
+    # 「あたり」と表示される
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	foreach<A name="foreach"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(foreach エントリ1 エントリ2 文1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		文1をエントリ2内の全単語について評価した結果
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリ2内の全単語を順にエントリ1にセットし、文1を評価。
+		文1にインラインスクリプトを用いる場合には、$()で囲む。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(set N 0 ; foreach i npw $(echo ${i}様、 ; inc N) ; echo 以上${N}名)
+  # npwエントリ内の人名を全て「様」をつけて呼び、最後に「以上n名」と
+  # 人数を表示
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	loop<A name="loop"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(loop 回数 文1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		文1の戻り値
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		指定回数だけ、文1を繰り返し評価する。
+		回数、文1にインラインスクリプトを用いる場合には、$()で囲む。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(loop 10 "tick!")
+  # 「tick!」と10回表示される
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	silent<A name="silent"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(silent)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		マルチステートメント中、silentが登場するまでの戻り値を破棄。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(echo 1 ; echo 2 ; silent ; echo 3) #「3」がブロックの戻り値になる
+参考
+  $(echo 1 ; echo 2 ; echo 3)          #「123」がブロックの戻り値になる
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	until<A name="until"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(until 条件文 文1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		文1の戻り値
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		条件文が偽の間、文1を繰り返し評価する。
+		条件文、文1にインラインスクリプトを用いる場合には、$()で囲む。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(set A ${npw} ; set B ${npw} ; until $([ ${A} != ${B} ]) $(set B ${npw}))
+  # AエントリとBエントリが必ず異なるようにする
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	while<A name="while"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(while 条件文 文1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		文1の戻り値
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		条件文が真の間、文1を繰り返し評価する。
+		条件文、文1にインラインスクリプトを用いる場合には、$()で囲む。
+	</TD>
+</TR>
+<TR>
+<TD colspan="2">
+<PRE>
+例
+  $(set A ${npw} ; set B ${npw} ; while $([ ${A} == ${B} ]) $(set B ${npw}))
+  # AエントリとBエントリが必ず異なるようにする
+</PRE></TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	NULL<A name="NULL"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(NULL)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし(空文字列)
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		空文字列を返す。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(if $([ ${test1} == $(NULL) ]) $(echo "test1はカラ") )
+  # test1エントリに何も入っていないか、空白を返されたときにメッセージを表示
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	?<A name="randomselect"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(? 文1  文2 ...  文n)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		文1から文nまでの内どれか一つの戻り値
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		引数として与えられた文から、どれか一つをランダムに選んで評価する。
+		拡張makotoの代用。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(? "右" "左")"に行く"
+  # 「右に行く」または「左に行く」と表示される
+</PRE>
+</TD></TR>
+</TABLE>
+
+<A name="dic-handle"></A>
+<H4>4.2.2. コマンド-辞書操作</H4>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	adddict<A name="adddict"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(adddict エントリ1 単語1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリ1に単語1を追加する。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(adddict npw 田中真紀子)   # npwエントリに「田中真紀子」を追加
+  $(adddict name ${npw})      # nameエントリにnpwエントリ中の単語を追加
+  $(adddict Act "${normal}")  # Actエントリに「${normal}」を追加
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	array<A name="array"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(array エントリ1 インデックス)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		エントリ1の(インデックス+1)番目の単語の文字列
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリ1の(インデックス+1)番目の単語を返す。<BR>
+		テスト中の機能であり、仕様変更の可能性が高い。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(set i 0 ; loop $(size npw) $(array npw ${i} ; echo "\n" ; inc i))
+  # $(foreach i npw $(echo ${i}"\n"))と等価
+  
+  Check : $(if $([ $(array npw ${i}) == "END" ]) $(set i $(size npw)) $(inc i))
+  $(set i 0 ; while $([ ${i} -lt $(size npw) ]) ${Check})
+  # npwエントリの全単語を順に参照し、「END」という内容があったらループ終了
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	clear<A name="clear"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(clear エントリ1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリ1から内容をすべて削除する。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  test1 : word1, word2, word3
+  $(clear test1)              # test1エントリの内容を全て消去
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	enumerate<A name="enumerate"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(enumerate エントリ1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		検索結果
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリ1に含まれる全ての単語を、空白文字で接続して返す。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  season : 春 , 夏 , 秋 , 冬
+  $(enumerate season) # 「春 夏 秋 冬」を返す
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	get<A name="get"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(get エントリ1 インデックス)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		エントリ1の(インデックス+1)番目の単語の文字列
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリ1の(インデックス+1)番目の単語を、単語内のエントリ
+		呼び出し、インラインスクリプトを評価せずに文字列として返す。<BR>
+		テスト中の機能であり、仕様変更の可能性が高い。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  shiori : 偽栞$(set AI 偽栞), 華和梨$(set AI 華和梨), 翡翠$(set AI 翡翠)
+  $(get shiori 1)  # 「"華和梨"$("set" "AI" "華和梨" )」が返る
+                   # AIエントリには何もセットされない
+
+参考
+  ${shiori}        # 偽栞、華和梨、翡翠のどれかが返り、戻り値と同じ内容が
+                   # AIエントリにセットされる
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	set<A name="set"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(set エントリ1 単語1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリ1から一度内容をすべて削除してから、単語1を登録する。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  dummy : 1
+  $(set mode 1)               # modeエントリの内容は「1」だけになる
+  $(set mody ${dummy})        # modeエントリの内容は${dummy}＝「1」になる
+  $(set emotion "${angry}")   # emotionエントリの内容は「${angry}」になる
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	size<A name="size"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(size エントリ1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		単語数
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリ1中の単語数を返す。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  理夢 : 理夢
+  ninni.angels,famous.ghosts : 奈留, せりこ, まゆら, ${理夢}
+  dark.sisters,famous.ghosts : 毒子, 花ちゃん, サンバーレイン, ${理夢}
+  $(size dark.sisters)               # 4が返る
+  $(size famous.ghosts)              # 8が返る
+</PRE>
+</TD></TR>
+</TABLE>
+
+<!--
+<A name="dic-handle-sp"></A>
+<H4>4.2.x. コマンド-特殊辞書操作</H4>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	pop<A name="pop"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(pop エントリ1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		エントリ1の末尾の単語
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリ1の末尾にある単語を削除し、それを返す。
+		エントリ1に単語が無ければ空文字列を返す。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  oldmachine : PC9801,X68k,MSX2,PC8801,X1,PC8001
+  $(enumerate oldmachine) # 「PC9801 X68k MSX2 PC8801 X1 PC8001」を返す
+  $(pop oldmachine)       # 「PC8001」を返す
+  $(enumerate oldmachine) # 「PC9801 X68k MSX2 PC8801 X1」を返す
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	push<A name="push"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(push エントリ1 単語1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリ1の末尾に単語1を追加する。adddictと同義。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(push npw Meister)      # npwエントリに「Meister」を追加
+  $(push name ${npw})      # nameエントリにnpwエントリ中の単語を追加
+  $(push Act "${normal}")  # Actエントリに「${normal}」を追加
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	shift<A name="shift"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(shift エントリ1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		エントリ1の先頭にある単語
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリ1の先頭にある単語を一つ削除し、それを返す。
+		エントリ1に単語が無ければ空文字列を返す。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  counter : 1, 2, 3, 4, 5
+  sentence : \hこの文が呼ばれるのは$(shift counter)回目だね。\e
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	unshift<A name="unshift"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(unshift エントリ1 単語1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリ1の先頭に単語1を挿入する。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  ghosts : まゆら,理夢,美来,白子,安子
+  $(enumerate ghosts)
+  # 「まゆら 理夢 美来 白子 安子」を返す
+  $(unshift 任意 ; enumerate ghosts)
+  # 「任意 まゆら 理夢 美来 白子 安子」を返す
+</PRE>
+</TD></TR>
+</TABLE>
+-->
+
+<A name="file-io"></A>
+<H4>4.2.3. コマンド-ファイル操作</H4>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	load<A name="load"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(load ファイル名)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		華和梨辞書形式ファイルを読み込む。暗号化辞書も可。
+		ファイル名の先頭が「/」「\」またはドライブ名から始まる場合には
+		絶対パスとみなし、それ以外の場合にはゴーストのディレクトリからの
+		相対パスとみなす。
+		kawari.iniに「dict : ファイル名」と書いた場合と同じ動作をする。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(load dict-flag.txt) # dict-flag.txtを読み込む
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	readdir<A name="readdir"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(readdir ディレクトリ エントリ1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		指定ディレクトリに含まれるファイル・ディレクトリ名を
+		エントリ1に保存する。エントリ1の以前の内容は消去される。<BR>
+		ディレクトリ名は相対パスも可。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(readdir "..\..\shell" shell) # 自ゴーストで使用できるシェル一覧をshellに保存
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	save<A name="save"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(save ファイル名 エントリ名1 ... )
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		ファイルにエントリ内容を華和梨辞書形式でセーブする。
+		saveが実行されると指定ファイルの内容は一旦クリアされ、
+		指定エントリ群の内容が新たに書きこまれる。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(save dict-flag.txt flag1 flag2 flag3)
+  # flag1、flag2、flag3エントリをdict-flag.txtに保存
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	savecrypt<A name="savecrypt"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(savecrypt ファイル名 エントリ名1 ... )
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		ファイルにエントリ内容を暗号化華和梨辞書形式でセーブする。
+		savecryptが実行されると指定ファイルの内容は一旦クリアされ、
+		指定エントリ群の内容が新たに書きこまれる。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(savecrypt dict-flag.txt flag1 flag2 flag3)
+  # flag1、flag2、flag3エントリをdict-flag.txtに暗号化して保存
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	textload<A name="textload"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(textload ファイル名 エントリ1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		テキストファイルを読み込む。<BR>
+		ファイルの1行目は「エントリ1.1」、2行目は「エントリ1.2」、
+		ファイルのn行目は「エントリ1.n」というエントリにそれぞれ書き込む。<BR>
+		ファイルの行数は「エントリ1.size」に書き込む。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(textload mypoem.txt poem)
+  \0$(set i 1 ; loop ${poem.size} $(entry poem.${i} ; inc i))\e
+  # ファイルmypoem.txtの内容を読み込み、さくら側バルーンで内容を表示する
+</PRE>
+</TD></TR>
+</TABLE>
+
+<A name="counter"></A>
+<H4>4.2.4. コマンド-カウンタ</H4>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	dec<A name="dec"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(dec エントリ1 減分 下限)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリ1を減分だけ減算する。減分と下限は省略可能。
+		減分を省略した場合、1と見なす。
+		減算した結果が下限より小さくなった場合、エントリ1の内容は下限となる。
+		下限を省略するといつまでも減算できる。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(dec N)        # Nを1だけ減らす
+  $(dec N 5)      # Nを5だけ減らす
+  $(dec N 10 0)   # Nを10だけ減らし、結果が0より小さければNは0とする
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	inc<A name="inc"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(inc エントリ1 増分 上限)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリ1を増分だけ加算する。増分と上限は省略可能。
+		増分を省略した場合、1と見なす。
+		加算した結果が上限より大きくなった場合、エントリ1の内容は上限となる。
+		上限を省略するといつまでも加算できる。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(inc N)        # Nを1だけ増やす
+  $(inc N 5)      # Nを5だけ増やす
+  $(inc N 10 100) # Nを10だけ増やし、結果が100より大きければNは100とする
+</PRE>
+</TD></TR>
+</TABLE>
+
+<A name="calc"></A>
+<H4>4.2.5. コマンド-評価・比較</H4>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	expr<A name="expr"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(expr EXPRESSION)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		EXPRESSIONの値。真偽値は"1"(真)か""(偽)で返る。
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		EXPRESSIONで与えられた式を評価し、その値を返す。
+		<A href="http://www.linux.or.jp/JM/html/gnumaniak/man1/expr.1.html">
+		GNU expr</A>を規範とした機能、構文を持つ。
+		以下に留意のこと。
+		<UL>
+			<LI>一つ一つの記号は空白で区切る。</LI>
+			<LI>exprは数値と文字列の双方を扱う。ただし、
+			    数値として認識されるのはいわゆる「半角」の10進整数のみ。</LI>
+		</UL>
+		EXPRESSIONの種類は以下の通り。<BR>
+		<DL>
+		<DT>ARG1 | ARG2</DT>
+			<DD>ARG1。ただし、ARG1が偽ならARG2。</DD>
+		<DT>ARG1 & ARG2</DT>
+			<DD>ARG1。ただし、ARG1とARG2どちらかが真でないなら、""。</DD>
+		<DT>ARG1 &lt; ARG2</DT>
+			<DD>ARG1がARG2より小さければ真("1")。そうでないなら偽("")。
+			以下、比較演算は全て文字列にも適用可。</DD>
+		<DT>ARG1 &lt;= ARG2</DT>
+			<DD>ARG1がARG2と等しいか、より小さければ真。そうでなければ偽。</DD>
+		<DT>ARG1 = ARG2</DT>
+			<DD>ARG1とARG2が等しければ真。"=="にも対応。</DD>
+		<DT>ARG1 != ARG2</DT>
+			<DD>ARG1とARG2が等しくなければ真。</DD>
+		<DT>ARG1 &gt;= ARG2</DT>
+			<DD>ARG1がARG2と等しいか、より大きければ真。そうでなければ偽。</DD>
+		<DT>ARG1 &gt; ARG2</DT>
+			<DD>ARG1がARG2より大きければ真。そうでなければ偽。</DD>
+		<DT>ARG1 + ARG2</DT>
+			<DD>加算。どちらかあるいは両方が数値でなければ""。</DD>
+		<DT>ARG1 - ARG2</DT>
+			<DD>減算。どちらかあるいは両方が数値でなければ""。</DD>
+		<DT>ARG1 * ARG2</DT>
+			<DD>乗算。どちらかあるいは両方が数値でなければ""。</DD>
+		<DT>ARG1 / ARG2</DT>
+			<DD>除算。どちらかあるいは両方が数値でなければ""。</DD>
+		<DT>ARG1 % ARG2</DT>
+			<DD>剰余。ARG1をARG2で割った余り。
+			どちらかあるいは両方が数値でなければ""。</DD>
+		<DT>substr STRING POS LENGTH</DT>
+			<DD>部分文字列を得る。
+			STRING中のPOS番目の文字からLENGTH長だけ切り出す。
+			POSは1から数えるので注意。いわゆる「全角文字」も1文字ずつ数える。</DD>
+		<DT>index STRING CHARS</DT>
+			<DD>STRING中でCHARSに含まれるどれかの文字が最初に現れる場所を返す。
+			位置は1から数える。</DD>
+		<DT>length STRING</DT>
+			<DD>STRINGの長さ。</DD>
+		<DT>quote  TOKEN</DT>
+			<DD>TOKENを一まとまりの文字列とみなす。
+			TOKENが"index"や"length"であってもそれをキーワードとしないようにする。</DD>
+		<DT>( EXPRESSION )</DT>
+			<DD>EXPRESSIONの評価結果。これを使って入れ子の表現が可能になる。
+			<SPAN class="tt">$(～)</SPAN>
+			のインラインスクリプトそのものを入れ子にするわけではないことに注意。
+			<SPAN class="tt">$(expr 遅いねぇ & ( ( date %H ")" > 22 ")")</SPAN>
+			などということは不可能。
+			ただし、<SPAN class="tt">$(expr 遅いねぇ & ( $(date %H) > 22 ")")</SPAN>
+			は可能。
+			また、<SPAN class="tt">)</SPAN>
+			をクォートしないと<SPAN class="tt">$(</SPAN>
+			の対応カッコだと思われるので注意。
+			</DD>
+		<DT>find STRING SUBSTRING</DT>
+			<DD>STRING中にSUBSTRINGがあればSUBSTRINGを返す。無ければ""。
+			本来のexprには存在しないが、matchが無いので代替品として導入した。
+			</DD>
+		<DT>findpos STRING SUBSTRING</DT>
+			<DD>STRING中にSUBSTRINGがあれば、その先頭の位置を返す。なければ""。
+			同じく本来のexprには存在しないが、頻繁に使うので導入した。
+			</DD>
+		<DT>STRING : REGEXP</DT>
+		<DT>match STRING REGEXP</DT>
+			<DD>未実装。</DD>
+		</DL>
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例：
+$(expr ${npw.special} | ${npw})
+    # npw.specialに内容があれば、それ。無ければnpwの置換結果が返る。
+
+$(expr ${system.Sender} & ${system.Sentence})
+    # system.Sentenceとsystem.Sender双方に内容があれば、
+    # system.Senderが返る。
+
+$(expr substr １2３4５6７ 1 3)
+    # 出力 : １2３
+
+\u$(expr substr ${dms} 1 6)\w8\w8…\w8\w8…\w8\w8\w8\w8
+\h\s[7]どうして途中で止めるんだよっ！\w8\e
+
+$(expr index 華和梨の代わり わ)
+    # 出力 : 6
+
+$(expr 20 * ( 3 + 2 ")")
+    # 出力 : 100
+
+$(expr ${system.Sender} & ( ${system.Sender} != まゆら ")")
+    # system.Senderが空  →  (出力無し)
+    # system.Senderが"まゆら" → (出力無し)
+    # system.Senderが"まゆら"以外 → system.Senderの値
+
+$(expr find 華和梨の代わり わ)
+    # 出力 : わ
+$(expr findpos 華和梨の代わり わ)
+    # 出力 : 6
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	test<A name="test"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(test 条件式)<BR>$([ 条件式 ])
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		条件式が真なら"true"、偽なら"false"
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		条件式の真偽を返す。比較演算子は以下が使える。
+		<UL>
+		<TABLE border="0">
+		<TR><TD></TD><TD></TD><TD>A : Aが真ならば真</TD></TR>
+		<TR><TD></TD><TD align="center">!</TD><TD>A  : Aが偽ならば真</TD></TR>
+		<TR><TD>A</TD><TD align="center">==</TD><TD>B : AとBが同じ文字列ならば真</TD></TR>
+		<TR><TD>A</TD><TD align="center">=</TD><TD>B : AとBが同じ文字列ならば真</TD></TR>
+		<TR><TD>A</TD><TD align="center">!=</TD><TD>B : AとBが同じ文字列でなければ真</TD></TR>
+		<TR><TD>A</TD><TD align="center">&lt;</TD><TD>B : AがBより辞書順で前にあれば真</TD></TR>
+		<TR><TD>A</TD><TD align="center">&gt;</TD><TD>B : AがBより辞書順で後にあれば真</TD></TR>
+		<TR><TD>A</TD><TD align="center">&lt;=</TD><TD>B : AがBより辞書順で後でなければ真</TD></TR>
+		<TR><TD>A</TD><TD align="center">&gt;=</TD><TD>B : AがBより辞書順で前になければ真</TD></TR>
+		<TR><TD>A</TD><TD align="center">-eq</TD><TD>B : AがBと等しければ真</TD></TR>
+		<TR><TD>A</TD><TD align="center">-ne</TD><TD>B : AがBと等しくなければ真</TD></TR>
+		<TR><TD>A</TD><TD align="center">-lt</TD><TD>B : AがBより小さければ真</TD></TR>
+		<TR><TD>A</TD><TD align="center">-gt</TD><TD>B : AがBより大きければ真</TD></TR>
+		<TR><TD>A</TD><TD align="center">-le</TD><TD>B : AがB以下ならば真</TD></TR>
+		<TR><TD>A</TD><TD align="center">-ge</TD><TD>B : AがB以上ならば真</TD></TR>
+		<TR><TD>A</TD><TD align="center">&&</TD><TD>B : AとBが共に真ならば真</TD></TR>
+		<TR><TD>A</TD><TD align="center">||</TD><TD>B : AもしくはBが真ならば真</TD></TR>
+		</TABLE>
+		</UL>
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  XBOX : toy
+  PS2 : computer
+  Workstation : computer
+  ZAURUS : 40000
+  visor : 25000
+  $(test ${XBOX} == "toy")       # 「true」が返る
+  $(test ${PS2} != "computer")   # 「false」が返る
+  $(test ${ZAURUS} -lt ${visor}) # 「false」が返る
+  $(if $([ ${PS2} == ${Workstation} ]) "\hPS2欲しい！\e" "\hPS2いらない。\e")
+  # 「PS2欲しい！」と表示する
+</PRE>
+</TD></TR>
+</TABLE>
+
+<A name="saori"></A>
+<H4>4.2.6. コマンド-SAORI</H4>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+  saoriregist<A name="saoriregist"></A>
+</CAPTION>
+<TR>
+  <TD width="10%">書式</TD>
+  <TD class="tt">
+    $(saoriregist DLLファイル エイリアス [ オプション ] )
+  </TD>
+</TR>
+<TR>
+  <TD>戻り値</TD>
+  <TD>
+    なし
+  </TD>
+</TR>
+<TR>
+  <TD>機能</TD>
+  <TD>
+    <P>
+      SAORIモジュールの登録。
+      DLLファイルには、相対パスまたは絶対パスでDLLを指定する。
+      エイリアスは、callsaoriコマンドでSAORIモジュールを呼ぶ際のキーワードを指定する。
+    </P><P>
+      オプションには、SAORIモジュールをロードするタイミングを指定する。
+      SAORIの中にはロードに時間のかかるものや、
+      呼ばれない可能性があることも考えられるため、
+      このような調整が可能となっている。
+      タイミングには<SPAN class="tt">"preload", "loadoncall", "noresident"</SPAN>
+      の3種類があり、
+      それぞれ、「saoriregist時にロード」「最初にcallsaori(x)された時にロード」
+      「callsaori時にロードし、終わったら即アンロード」を意味する。
+      デフォルトはloadoncallである。
+    </P>
+  </TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  # saori_cpuid.dllをcpuidとして登録。今すぐロード。
+  $(saoriregist modules\saori_cpuid.dll cpuid preload)
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+  saorierase<A name="saorierase"></A>
+</CAPTION>
+<TR>
+  <TD width="10%">書式</TD>
+  <TD class="tt">
+    $(saorierase エイリアス)
+  </TD>
+</TR>
+<TR>
+  <TD>戻り値</TD>
+  <TD>
+    なし
+  </TD>
+</TR>
+<TR>
+  <TD>機能</TD>
+  <TD>
+    登録済みのSAORIを登録から抹消する。
+    ロードされていたら併せてアンロードされる。
+  </TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  # cpuidをアンロード
+  $(saorierase cpuid)
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+  callsaori<A name="callsaori"></A>
+</CAPTION>
+<TR>
+  <TD width="10%">書式</TD>
+  <TD class="tt">
+    callsaori エイリアス [ 引数 引数 ... ]
+  </TD>
+</TR>
+<TR>
+  <TD>戻り値</TD>
+  <TD>
+    SAORIの戻り値(Result)
+  </TD>
+</TR>
+<TR>
+  <TD>機能</TD>
+  <TD>
+    戻り値が一つのSAORIを呼び出す。
+  </TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  sentence : \0\s[0]ここのOSは$(callsaori cpuid os.name)ね。\e
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+  callsaorix<A name="callsaorix"></A>
+</CAPTION>
+<TR>
+  <TD width="10%">書式</TD>
+  <TD class="tt">
+    callsaorix 戻り値格納エントリ エイリアス [ 引数 引数 ... ]
+  </TD>
+</TR>
+<TR>
+  <TD>戻り値</TD>
+  <TD>
+    SAORI呼び出し結果(Result)
+  </TD>
+</TR>
+<TR>
+  <TD>機能</TD>
+  <TD>
+    複数の戻り値を持つSAORIを呼び出し、結果を得る。
+    SAORIの戻り値はValue[数値]ヘッダに格納されているが、
+    これを、「<SPAN class="tt">指定エントリ.Value[数値]</SPAN>」
+    エントリに格納する。
+    また、「<SPAN class="tt">指定エントリ.size</SPAN>」
+    に、得られた戻り値(Value)の数を返す。
+  </TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  # 早坂氏作のdate.dllを使い、日付を取得する
+  $(callsaorix 日付 date)
+
+  # 結果は次のエントリに記録される
+  # 日付.Value0: 年
+  # 日付.Value1: 月
+  # 日付.Value2: 日
+</PRE>
+</TD></TR>
+</TABLE>
+
+<A name="output"></A>
+<H4>4.2.7. コマンド-出力</H4>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	echo<A name="echo"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(echo 単語1 ...)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		全引数を空白文字で接続したもの
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		与えられた全引数を、空白文字で区切って返す。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(echo 1 2 3 4 5)                     # 「1 2 3 4 5」が返る
+  $(set test1 "TEST" ; echo ${test1})   # 「TEST」が返る
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	escape<A name="escape"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(escape 単語1 ...)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		全引数を空白文字で接続し、「\」を「\\」に、「%」を「\%」に置換したもの
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		与えられた全引数のさくらスクリプトをエスケープする。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  event.OnFileDropped : $(escape ${system.Reference0})がドロップされました。
+  # ドラッグ＆ドロップされたファイル名を表示する
+</PRE>
+</TD></TR>
+</TABLE>
+
+<A name="aux"></A>
+<H4>4.2.8. コマンド-補助機能</H4>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	chr<A name="chr"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(chr 文字コード)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		指定した文字コードの一文字
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		指定した文字コードの一文字を返す。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(chr 1)    # いわゆる「バイト値1」が返る
+  $(chr 2)    # いわゆる「バイト値2」が返る
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	entry<A name="entry"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(entry エントリ名 単語1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		${エントリ名}の結果、または単語1
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		エントリからランダムに単語を選び、評価する。
+		指定したエントリが空の場合、単語1を返す。<BR>
+		単語1は省略可能。省略した時に指定したエントリが空の場合、
+		空文字を返す。<BR>
+		evalでも同様のことが可能だが、entryの方が負荷が軽い。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(entry "npw")                            # ${npw}と同じ
+  $(entry "message."$(rand 3) )             # ${message.0}から${message.2}のどれか
+  $(entry "system.OtherGhost" ${myname})    # ${system.OtherGhost}と同じ
+                                            # 空の場合は${myname}の戻り値が返る
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	eval<A name="eval"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(eval 単語1 ...)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		デコード結果
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		与えられた全引数中の${}、$()等を再度再帰的に評価し、
+		展開結果を返す。再帰的評価を行う以外はechoと同じ。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  kawari     : 華和梨
+  nise       : 偽
+  shiori     : 栞
+  niseshiori : ${nise}${shiori}
+  $(eval "理夢の偽AIは${kawari}です")       # 「理夢の偽AIは華和梨です」が返る
+  $(eval "奈留の偽AIは${niseshiori}です")   # 「奈留の偽AIは偽栞です」が返る
+
+参考
+  $(set a "奈留の偽AIは${niseshiori}です")  # aエントリの内容は
+                                            #「奈留の偽AIは${niseshiori}です」
+                                            # になる
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	pirocall<A name="pirocall"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(pirocall #エントリ1 単語1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		ローカルスクリプト形式ファイルの「#エントリ1」の本文、または単語1
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		kawari.iniで読み込んだ「何か。(仮)」のローカルスクリプト
+		形式のファイルから、指定したエントリの本文を返す。
+		指定したエントリが無い場合、単語1を返す。<BR>
+		単語1は省略可能。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  event.OnMouseDoubleClick : $(pirocall "#mainmenu")
+  event.OnChoiceSelect     : $(pirocall ${system.Reference0})
+  event.OnChoiceTimeout    : $(pirocall "#timeout alternate")
+  # ローカルスクリプトで実現したメニューを読み込んだ場合、
+  # これで従来と互換の動作をする
+
+  event.OnBoot : $(entry "time."$(date %H) )
+  time.01, time.02, time 03 : $(pirocall "#bootup etc")
+  time.04, time.05, time.06 : $(pirocall "#bootup early morning")
+  time.07, time.08, time.09 : $(pirocall "#bootup morning")
+  time.10, time.11, time.12 : $(pirocall "#bootup etc")
+  time.13, time.14, time.15 : $(pirocall "#bootup etc")
+  time.16, time.17, time.18 : $(pirocall "#bootup evening")
+  time.19, time.20, time.21 : $(pirocall "#bootup early night")
+  time.22, time.23, time.24 : $(pirocall "#bootup night")
+  # 起動時間別メッセージをローカルスクリプトファイルから流用して表示
+
+  $(pirocall "#mainmenu" ${mainmenu})
+  # ローカルスクリプトのエントリ「mainmenu」が無い場合、
+  # 華和梨のmainmenuエントリの戻り値を返す
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	split<A name="split"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(split エントリ1 単語1 区切り文字列1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		単語1を区切り文字列1で分割し、エントリ1を基底とする
+		エントリ群に格納する。<BR>
+		分割した文字列の一つ目は「エントリ1.1」エントリ、
+		二つ目は「エントリ1.2」エントリに格納する。<BR>
+		分割数は「エントリ1.size」エントリに格納する。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(split string "AA:BB:CC" ":")             # AA、BB、CCに分割
+  $(split Header ${system.GhostEx} $(chr 1)) # GhostExヘッダをバイト値1で分割
+  $(split Msg "籠の中の鳥" "の")             # 籠、中、鳥に分割
+  $(split test "1ch2ch3ch" "ch")             # 1、2、3に分割
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	urllist<A name="urllist"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(urllist サイト名1 URL1 バナーURL1 ... サイト名n URLn バナーURLn)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		サイト名1[1]URL1[1]バナーURL1[2]...サイト名n[1]URLn[1]バナーURLn[2]<BR>
+		※[1]はバイト値1、[2]はバイト値2
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		SHIORI/2.5規格に従い、「おすすめリスト」を生成する。
+		引数の数は必ず3の倍数になること。<BR>
+		仕切り線はサイト名に「-」を渡す。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  futaba : "http://futaba.mikage.to/"
+  kawari : "http://meister-d-i.hoops.ne.jp/"
+
+  # さくら側のおすすめサイトのリスト
+  resource.sakura.recommendsites :
+    $(urllist "ふたばみかげ" ${futaba} ${futaba}"banner.png"
+    "何か以外の何か" ${kawari} ${kawari}"banner.png")
+  ※実際は一行
+
+  # うにゅう側のおすすめサイトのリスト
+  resource.kero.recommendsites :
+    $(urllist "ふたばみかげ" "http://futaba.mikage.to/" "banner.png")
+    $(urllist "-" "-" "-")
+    $(urllist "何か以外の何か" "http://meister-d-i.hoops.ne.jp/" "banner.png")
+  ※実際は一行
+  # サイトごとにurllistコマンドを分けて書くことも出来る
+  # 仕切り線の場合でも、ダミーのURLとバナーURLを与える必要がある
+</PRE>
+</TD></TR>
+</TABLE>
+
+<!--
+<A name="communicate"></A>
+<H4>4.2.x. コマンド-コミュニケート</H4>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	searchghost<A name="searchghost"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(searchghost エントリ1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		なし
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		稼働中の他のゴーストを探し、エントリ1に一覧をセットする。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(searchghost ghosts ; set system.communicate ${ghosts})
+  # ghostsエントリに稼動中の他のゴースト一覧をセット
+  # そのうちの1つをランダムに選び、system.communicateエントリにセット
+</PRE>
+</TD></TR>
+</TABLE>
+-->
+
+<A name="othercmd"></A>
+<H4>4.2.9. コマンド-その他</H4>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	date<A name="date"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(date 書式文字列1)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		日時の文字列
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		書式文字列1に従って日時を返す。書式文字列には以下が使える。
+		<UL>
+		<TABLE border="0">
+		<TR><TD>%d</TD><TD>: 日(2桁,01..31)</TD></TR>
+		<TR><TD>%e</TD><TD>: 日(1..31)</TD></TR>
+		<TR><TD>%H</TD><TD>: 時(2桁,00..23)</TD></TR>
+		<TR><TD>%j</TD><TD>: 元日からの通産日(3桁,001..366)</TD></TR>
+		<TR><TD>%J</TD><TD>: 元日からの通算日(1..366)</TD></TR>
+		<TR><TD>%k</TD><TD>: 時(0..23)</TD></TR>
+		<TR><TD>%m</TD><TD>: 月(2桁,01..12)</TD></TR>
+		<TR><TD>%M</TD><TD>: 分(2桁,00..59)</TD></TR>
+		<TR><TD>%n</TD><TD>: 月(1..12)</TD></TR>
+		<TR><TD>%N</TD><TD>: 分(0..59)</TD></TR>
+		<TR><TD>%r</TD><TD>: 秒(0..59)</TD></TR>
+		<TR><TD>%S</TD><TD>: 秒(2桁,00..59)</TD></TR>
+		<TR><TD>%w</TD><TD>: 曜日(0..6,日曜日が0)</TD></TR>
+		<TR><TD>%y</TD><TD>: 年(4桁,2000...)</TD></TR>
+		<TR><TD>%Y</TD><TD>: 年(4桁,2000...)</TD></TR>
+		</TABLE>
+		</UL>
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  event.OnBoot : $(entry "time."$(date %H) )
+  time.01 : 午前一時です\e
+  time.02 : 午前二時です\e
+  (中略)
+  time.23 : 午後十一時です\e
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	help<A name="help"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(help コマンド名)<BR>
+		$(help)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		リファレンスまたはコマンド一覧
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		コマンドが指定された場合は、リファレンスを返す。<BR>
+		コマンドが指定されない場合は、使用可能なコマンドの一覧を返す。<BR>
+		戻り値は"幸水"での出力を前提にしている。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例("幸水"での実行例)
+  echo-mode > $(help help)
+  help
+  syntax  : help Command1
+  return  : help message
+  comment : return online help of KIS commnad (for Kosui use)
+  echo-mode > $(help)
+  Command list :
+          echo
+          set
+      (・・・中略・・・)
+          escape
+  echo-mode >
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	rand<A name="rand"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(rand 上限)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		整数の文字列
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		0から上限の乱数を返す。戻り値は0を含み、上限を含まない。
+		上限は負の数でもよい。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(rand 52)    # 0から51までの乱数を返す
+  $(rand -10)   # 0から-9までの乱数を返す
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	tolower<A name="tolower"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(tolower 文字列1 ...)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		文字列中のアルファベット大文字を小文字に置換した結果
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		文字列中のアルファベット大文字を小文字に置換する。
+		半角文字のみに作用する。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(tolower ABC def)    # 「abc def」が返る
+  $(tolower ＸＹＺ XYZ) # 「ＸＹＺ xyz」が返る
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	toupper<A name="toupper"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(toupper 文字列1 ...)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		文字列中のアルファベット小文字を大文字に置換した結果
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		文字列中のアルファベット小文字を大文字に置換する。
+		半角文字のみに作用する。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例
+  $(toupper ABC def)    # 「ABC DEF」が返る
+  $(toupper ｘｙｚ xyz) # 「ｘｙｚ XYZ」が返る
+</PRE>
+</TD></TR>
+</TABLE>
+
+<TABLE class="command" width="100%">
+<CAPTION align="left">
+	ver<A name="ver"></A>
+</CAPTION>
+<TR>
+	<TD width="10%">書式</TD>
+	<TD>
+		$(ver)
+	</TD>
+</TR>
+<TR>
+	<TD>戻り値</TD>
+	<TD>
+		バージョン情報
+	</TD>
+</TR>
+<TR>
+	<TD>機能</TD>
+	<TD>
+		"華和梨"のバージョン情報を返す。<BR>
+		バージョン情報のフォーマットは「基本名称[.補助名称[.補助名称]]/バージョン番号」。
+	</TD>
+</TR>
+<TR><TD colspan="2">
+<PRE>
+例("幸水"での実行例)
+  echo-mode > $(ver)
+  KAWARI/6.2.0
+</PRE>
+</TD></TR>
+</TABLE>
+
+<A name="appendix"></A>
+<H2>Appendix</H2>
+
+<A name="apdx1"></A>
+<H3>I. インラインスクリプトの追加方法</H3>
+
+<P>
+インラインスクリプトの関数コマンドは、簡単に追加できるよう、華和梨の他の部分と
+別のフォルダにソースが収めてあります。srcフォルダ中のkisフォルダがそれです。
+自分で"華和梨"を拡張する際、KISの追加だけで望む機能が得られるか、まず検討して
+下さい。この場合、華和梨のほかの機能へ与える影響が少なく、無用のエンバグを
+避けられます。また、他の人がソースコードを再利用しやすくなるはずです。
+</P><P>
+KISコマンド追加の基本手順は以下の通りです。
+</P>
+
+<BLOCKQUOTE>
+  0) ソースを書き換える前に、オリジナルのソースがMakeできるか確認する<BR>
+  1) ソースコードのkis_echo.h/kis_echo.cppをよく読んで、参考にする<BR>
+  2) 拡張するKISコマンドのヘッダファイルを用意する<BR>
+	<UL>
+     <LI>config.hとkis_base.hをincludeする</LI>
+     <LI>TKisFunction_baseクラスをpublicに継承し、コマンドのクラスを作る</LI>
+     <LI>INLINE_SCRIPT_REGIST()マクロを使い、コマンドのクラスを登録</LI>
+     <LI>メンバ関数Initに簡単な解説を書く</LI>
+     <LI>メンバ関数string Function(vector&lt;string&gt;&amp;)に処理を書く</LI>
+	</UL>
+  3) ヘッダファイル名をkis_config.hに追加する<BR>
+  4) cppが増えた場合、必ずファイル名をfiles.makに追加しておく<BR>
+  5) Make<BR>
+</BLOCKQUOTE>
+
+<P>
+良いKISができたら、ぜひ教えてください。オリジナルの"華和梨"にも採用したいと思います。
+</P>
+
+<A name="apdx2"></A>
+<H3>II. 注釈</H3>
+
+<A name="ref1"></A>
+<H4>*1 構文コマンドと関数コマンド</H4>
+<P>
+構文と関数の、実用上最も重要な違いは、
+<UL>
+<LI>構文の評価は引数評価以前に行われる
+<LI>関数の評価は引数評価以後に行われる
+</UL>
+という点です。引数評価以前は、
+引数は「${npw}」や「$(echo Hello)」等の「書いたまま」の状態です。
+一方、引数評価以後は、引数は展開されて、
+「カルロス・ゴーン」や「Hello」等の「文字列だけ」の状態となります。
+引数が通常の文字列だけである場合はさほど問題になりませんが、
+引数に<A href="#set">set</A>コマンド等の、
+戻り値よりも機能が目的となるコマンドがあった場合、
+この差が意味を持つことになります。
+<!-- 構文の引数中か関数の引数中かで、コマンドが実行されるか否かが異なります。 -->
+</P>
+
+<PRE>
+  true : 真です。$(set tmp OK)
+  # 下記の二つは、表示上は恐らく同じ結果だが…
+  $(expr ${true} & ${cond})   # true文はcondが不成立でも実行されてしまう。
+  $(if ${cond} ${true})       # true文はcondが不成立なら実行されない。
+</PRE>
+
+<A name="ref2"></A>
+<H4>*2 インラインスクリプトに渡される引数の数</H4>
+<P>
+コマンドに引数を与える時、エントリ呼び出しで与える場合を考えます。
+
+<PRE>
+  $(expr $(entry ${EntryName}) | "Hello")
+</PRE>
+
+<P>
+このケースで、EntryNameエントリに何もセットされていない場合を考えます。
+この場合、exprコマンドの第1引数は空文字で、第2引数が「|」、第3引数が
+「Hello」になります。
+第1引数が「|」で、第2引数が「Hello」ということはありません。
+インラインスクリプトに渡される引数の数と位置は、エントリ解釈の前に確定します。
+</P>
+
+</BODY>
+</HEAD>
+</HTML>

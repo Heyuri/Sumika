@@ -1,0 +1,32 @@
+#-------------------------------------
+##初回起動
+#＊ Vanishカウント対応
+
+event.OnFirstBoot : $(set paramT1 $(if $([ ${system.Reference0 -eq 0 ]) "TalkFirstboot" "TalkSecondboot"))\t${countfreeze}${CallTalk}${countzero}
+#-------------------------------------
+#＋他のゴーストからの変更(前のゴースト消滅)
+
+event.OnVanished : $(set paramT1 "TalkVanished" ; set param1 ${system.Reference0} ; entry "CallGetWords" ; set paramT2 "."${answer} ; )${countzero}${CallTalk2}
+#-------------------------------------
+#＋消滅イベント
+
+#＋消滅が指示された
+event.OnVanishSelecting : \t${countfreeze}$(set paramT1 "TalkVanishSelecting")${CallTalk}
+
+#＋確認ダイアログで YES が選択された
+event.OnVanishSelected : \t${countfreeze}$(set paramT1 "TalkVanishSelected")${CallSave}${CallTalk}
+
+#＋確認ダイアログで NO が選択された
+event.OnVanishCancel : \t$(set paramT1 "TalkVanishCancel")${countzero}${CallTalk}
+
+#＋引き止められた
+event.OnVanishButtonHold : \t$(set paramT1 "TalkVanishButtonHold")${countzero}${CallTalk}
+#-------------------------------------
+#＋消滅通告ボタン
+
+#＋消滅通告ボタンのキャプション
+resource.vanishbuttoncaption : $(if $(entry ${FlagMode}".VanishButtonCaption") $(entry ${FlagMode}".VanishButtonCaption") $(entry "VanishButtonCaption"))
+
+#＋消滅通告ボタンの表示の有無
+resource.vanishbuttonvisible : $(if $(entry ${FlagMode}".VanishButtonVisible") $(entry ${FlagMode}".VanishButtonVisible") $(entry "VanishButtonVisible"))
+#-------------------------------------

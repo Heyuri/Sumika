@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shell renderer test</title>
+<style>
+  :root { color-scheme: light dark; --bg: #f6f6f8; --fg: #1d1d22; --box: #fff; --line: #c9c9d3; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #17181c; --fg: #e6e6ea; --box: #22242a; --line: #3a3d46; } }
+  body { margin: 0; padding: 16px; background: var(--bg); color: var(--fg); font: 14px/1.4 system-ui, sans-serif; }
+  h1 { font-size: 18px; margin: 0 0 12px; }
+  .panel { max-width: 640px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; align-items: center; }
+  button, input, select { font: inherit; padding: 3px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--box); color: var(--fg); }
+  input[type=number] { width: 6em; }
+  pre { background: var(--box); border: 1px solid var(--line); border-radius: 6px; padding: 8px; height: 240px; overflow: auto; font-size: 12px; }
+  .note { opacity: .7; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="panel">
+  <h1>Shell renderer</h1>
+  <p class="note">Serve the repository root (<code>python tools/serve.py --site .</code>) and open <code>/site/dev/shell.html</code>.
+    Add <code>?ghost=id</code> for another ghost than the site's first. Drag characters, click, double-click, wheel; the log shows the MouseInfo stream.
+    The quick buttons are the usual surface ids (0 to 8 the main character's, 10 and 11 the partner's, -1 hides the
+    character); a ghost's other surfaces go in the surface box.</p>
+  <div class="bar">
+    scope <input id="scope" type="number" value="0" min="0">
+    surface <input id="surface" type="number" value="0">
+    <button id="set">\s</button>
+    <button data-s="0">0</button><button data-s="1">1</button><button data-s="2">2</button><button data-s="3">3</button>
+    <button data-s="4">4</button><button data-s="5">5</button><button data-s="6">6</button><button data-s="7">7</button>
+    <button data-s="8">8</button><button data-s="10">10</button><button data-s="11">11</button><button data-s="-1">-1</button>
+  </div>
+  <div class="bar">
+    <select id="cat"></select><select id="part"></select>
+    <button id="on">on</button><button id="off">off</button><button id="toggle">toggle</button><button id="catoff">category off</button>
+  </div>
+  <div class="bar">
+    <button id="talk">talk 2 s</button>
+    anim <input id="anim" type="number" value="0"><button id="start">start</button><button id="stop">stop</button>
+    <select id="align"><option>default</option><option>bottom</option><option>top</option><option>free</option><option>left</option><option>right</option></select>
+    <label><input id="mirror" type="checkbox"> mirror</label>
+    <button id="reset">reset positions</button><button id="hide">hide/show</button>
+  </div>
+  <div class="bar">
+    <label><input id="persist" type="checkbox"> keep state across reloads</label>
+    <span id="info" class="note"></span>
+  </div>
+  <pre id="log"></pre>
+</div>
+<script type="module">
+import { SiteIndex, parseDescript } from '../../src/core/loader.js';
+import { setLogLevel } from '../../src/core/log.js';
+import { Stage } from '../../src/shell/stage.js';
+
+setLogLevel('debug');
+const $ = id => document.getElementById(id);
+const logEl = $('log');
+const log = (...a) => { logEl.textContent = a.join(' ') + '\n' + logEl.textContent.slice(0, 20000); };
+const KEY = 'sumika:dev:shell';
+$('persist').checked = localStorage.getItem(KEY) !== null;
+
+const base = new URL('../', location.href).href;
+const index = await SiteIndex.load(base);
+const ghostId = new URLSearchParams(location.search).get('ghost') || (index.ghosts[0] && index.ghosts[0].id);
+const files = await index.ghostFiles(ghostId);
+const ghostDescript = parseDescript(await files.text('ghost/master/descript.txt'));
+let state;
+try { state = JSON.parse(localStorage.getItem(KEY) || 'null') || undefined; } catch (e) { state = undefined; }
+const t0 = performance.now();
+const stage = await Stage.create({ files, ghostDescript, state });
+log(`stage ready in ${(performance.now() - t0).toFixed(0)} ms (${stage.shell.stats.blocks} blocks)`);
+window.stage = stage;
+
+stage.on('mouse', m => { if (m.type !== 'move') log(`mouse ${m.type} scope=${m.scope} (${m.x},${m.y}) btn=${m.button} wheel=${m.wheel} coll="${m.collision}" ${m.device}`); });
+stage.on('surface', e => log(`surface scope=${e.scope} id=${e.id} ${e.width}x${e.height}`));
+stage.on('bind', e => log(`bind scope=${e.scope} ${e.category}/${e.part} ${e.on ? 'on' : 'off'}`));
+stage.on('move', e => { if (e.reason !== 'drag' && e.reason !== 'animation') log(`move scope=${e.scope} ${e.reason}`); });
+const save = () => { if ($('persist').checked) localStorage.setItem(KEY, JSON.stringify(stage.saveState())); };
+for (const t of ['surface', 'bind', 'move']) stage.on(t, save);
+$('persist').onchange = () => { if ($('persist').checked) save(); else localStorage.removeItem(KEY); };
+
+const view = () => stage.char(+$('scope').value);
+const setS = id => { $('surface').value = id; log(`\\s[${id}] -> ${view().setSurface(id)}`); };
+$('set').onclick = () => setS(+$('surface').value);
+for (const b of document.querySelectorAll('[data-s]')) b.onclick = () => setS(+b.dataset.s);
+
+function fillCats() {
+  const groups = stage.shell.bindGroups(+$('scope').value);
+  const cats = [...new Set(groups.map(g => g.category))];
+  $('cat').innerHTML = cats.map(c => `<option>${c}</option>`).join('');
+  fillParts();
+}
+function fillParts() {
+  const groups = stage.shell.bindGroups(+$('scope').value).filter(g => g.category === $('cat').value);
+  $('part').innerHTML = groups.map(g => `<option>${g.part}</option>`).join('');
+}
+$('scope').onchange = fillCats;
+$('cat').onchange = fillParts;
+fillCats();
+const bind = v => view().bind($('cat').value, $('part').value, v);
+$('on').onclick = () => bind('1');
+$('off').onclick = () => bind('0');
+$('toggle').onclick = () => bind('');
+$('catoff').onclick = () => view().bind($('cat').value, '', '0');
+$('talk').onclick = () => {
+  const v = view(), end = performance.now() + 2000;
+  const id = setInterval(() => { v.onTalk(1); if (performance.now() > end) { clearInterval(id); v.onScriptEnd(); } }, 50);
+};
+$('start').onclick = () => view().startAnimation(+$('anim').value);
+$('stop').onclick = () => view().stopAnimation(+$('anim').value);
+$('align').onchange = () => view().setAlignment($('align').value);
+$('mirror').onchange = () => view().setScaling($('mirror').checked ? -100 : 100, 100);
+$('reset').onclick = () => stage.resetPositions();
+$('hide').onclick = () => { const v = view(); v.visible ? v.hide() : v.show(); };
+setInterval(() => { $('info').textContent = `scopes ${stage.scopes.join(',')} | dressupInfo ${stage.dressupInfo().length} chars | images ${(stage.images.bytes / 1048576).toFixed(1)} MB`; }, 1000);
+</script>
+</body>
+</html>

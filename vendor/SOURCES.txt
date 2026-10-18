@@ -1,0 +1,34 @@
+Third-party sources in vendor/, as their upstreams publish them. Each folder keeps its own licence files; the
+licences of what the published files compile in are collected in site/sumika/engines/<engine>.LICENSES.txt and
+midi.LICENSES.txt.
+
+Folders with a SOURCE.txt of their own (where and how each was taken, its checksums and its pin):
+  generaluser-gs-2.0.3      GeneralUser GS v2.0.3 (GeneralUser GS License v2.0): the reference SF2's documentation;
+                            the SF2 itself is left out of the repository (32 MB)
+  generaluser-gs-2.0.3-sf3  the same bank as SF3, the one Sumika publishes (GeneralUser GS License v2.0)
+  kawari-7.5.0              KAWARI Phase 7.5.0 (modified BSD), compiled into kawari7.wasm
+  kawari-8.2.8              KAWARI Phase 8.2.8 (modified BSD), compiled into kawari.wasm
+  spessasynth_core-4.3.22   spessasynth_core 4.3.22 (Apache-2.0), bundled into the MIDI player
+  stb-vorbis-0.0.6          stb-vorbis 0.0.6 (Apache-2.0; stb_vorbis.c MIT or public domain), bundled into it too
+
+Copies of git repositories (their files at these commits, the .git data left out). Their .gitmodules files do nothing
+here; their .gitignore files still apply below them, and tinyxml2's keeps out yaya-shiori/tinyxml2/resources/out/
+readme.txt, a placeholder its upstream adds by force, which no build reads:
+  satoriya-shiori  Satori, https://github.com/ukatech/satoriya-shiori, branch unicode, commit
+                   e2bf34804fcdd1d8973e237f166fce8f53d800f9 (Mc203-6). LICENSE (BSD-2-Clause).
+    satoriya/deelx   submodule https://github.com/ponapalt/deelx, commit af1a690cc8333620ca4f86f46058bb9b8eaf055f
+                     (DEELX: its header's copyright notice, no licence file)
+  yaya-shiori      YAYA, https://github.com/YAYA-shiori/yaya-shiori, commit e69fefb2c713360eef590fa031d63135586a0933
+                   (Tc606-2). LICENSE (BSD-3-Clause). Its submodules:
+    deelx            https://github.com/ponapalt/deelx, af1a690cc8333620ca4f86f46058bb9b8eaf055f
+    gumbo            https://github.com/ponapalt/gumbo-parser-mirror, c8846007c4d9a86046102c99fdbbd295f366f813
+                     (Apache-2.0, doc/COPYING)
+    parson           https://github.com/kgabis/parson, ec53fb6528b45811df9db0db22cab96a94a96a11 (MIT, LICENSE)
+    sqlite           https://github.com/ponapalt/sqlite-amalgamation-new, f0bc67bdbde2f8ebebc72a7bd02d342541814ab0
+                     (SQLite: public domain; the repository's LICENSE)
+    tinyxml2         https://github.com/ponapalt/tinyxml2, 007577b22c50b4d8bc72f127644669f4096773bb (zlib, LICENSE.txt)
+The engine builds name these commits (engines/satori/build.py COPY_OF, engines/yaya/build.py PINNED) and check the
+files they read from the copies by a pin (engines/common/vendor.py); a git checkout of its own in their place
+(the upstream at these commits, submodules included) names its commits itself.
+The upstreams' own Windows binaries in these trees (satoriya/satori/PackOne.exe, satoriya/satori/test/saori_console.exe
+and test/saori/fill_desktop.dll, OriginalAya/aya5.dll) are never run or used by Sumika.
